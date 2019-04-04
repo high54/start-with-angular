@@ -1,5 +1,5 @@
 # Débuter avec Angular 7+ et structure évolutive
-Dans ce cours nous allons mettre en place notre environnement de travail ainsi qu'une structure d'application évolutif.
+Dans ce cours nous allons mettre en place notre environnement de travail ainsi qu'une structure d'application évolutive.
 
 ## Mise en de l'environnement
 
@@ -1197,7 +1197,7 @@ Autant en profiter et placer le ng-content sous le titre de l'article :
 
 ## Pipes
 
-Un pipe permet de transformer des données, il ne s'occupe pas du DOM. Jusqu'a présent nous avons utilisé le pipe "async", mais pourquoi ne pas mettre en place un pipe pour filtrer les commentaires.
+Un pipe permet de transformer des données, il ne s'occupe pas du DOM. Jusqu'à présent nous avons utilisé le pipe "async", mais pourquoi ne pas mettre en place un pipe pour filtrer les commentaires.
 
 Dans le dossier pipes du module news :
 
@@ -1293,6 +1293,11 @@ Pour tester le pipe, il suffit d'ajouter le mot "Andouille" dans le contenu d'un
             "articleId":1
         }
 ```
+
+## Directives
+
+Une directive contrairement à un pipe permet de modifier le DOM. Nous allons utiliser l'exemple présent sur la documentation officiel d'Angular afin d'ajouter une directive qui va permettre de mettre en surbrillance l'auteur d'un article.
+
 
 
 
