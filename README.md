@@ -12,15 +12,25 @@ https://code.visualstudio.com/ alias VSCode
 Afin d'optimiser et gagner en performance lors du développement, voici la liste des extensions à installer sur VSCode :
 
 Visual Studio IntelliCode
+
 https://marketplace.visualstudio.com/items?itemName=VisualStudioExptTeam.vscodeintellicode
+
 TSLint
+
 https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-typescript-tslint-plugin
-Material Icon THeme
+
+Material Icon Theme
+
 https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme
+
 IntelliJ IDEA Keybinding
+
 https://marketplace.visualstudio.com/items?itemName=k--kato.intellij-idea-keybindings
+
 Angular 7 Snippets
+
 https://marketplace.visualstudio.com/items?itemName=Mikael.Angular-BeastCode
+
 
 ### Installer l'environnement
  
@@ -1091,5 +1101,44 @@ Ici nous utilisons le service des commentaires afin de les récupèrer.
 </div>
 
 ```
+
+Dans le template nous ajoutons une div avec un "*ngIf" afin de vérifier la présence des données asynchrone avant de les transmettre aux différents composants.
+
+
+Il ne manque plus qu'une chose pour pouvoir accéder à un article via son ID. Cependant vous pouvez y accéder directement via la barre d'adresse du navigateur en ajoutant "/1" à l'URL.
+
+Dans le point d'entré du module, à savoir la page "news", il nous faut ajouter un lien vers l'article complet. Le composant article-short-display étant dédié à l'affichage des articles dans la page "news", c'est dans sont template que nous ajoutons le lien :
+
+/modules/news/components/article-short-display/article-short-display.component.html
+```
+<div class="article-short-display">
+    <h2>{{article.title}}</h2>
+    <p>{{article.description}}</p>
+    <a routerLink="{{article.id}}">Lire plus...</a>
+</div>
+
+```
+
+Maintenant vous devriez pouvoir y accéder facilement. Mais il serait bon d'ajouter un lien pour revenir à l'accueil du module. Cette fois ci nous allons placer le lien directement dans la page "news-item".
+
+/modules/news/pages/news-item/news-item.component.html
+```
+<div class="news-item">
+    <a routerLink="../">Retour</a>
+    <div *ngIf="article$ | async as article">
+        <news-article-display [article]="article"></news-article-display>
+        <news-article-author [author]="article?.author"></news-article-author>
+    </div>
+    <news-article-comments *ngFor="let comment of (comments$ | async)" [comment]="comment">
+    </news-article-comments>
+</div>
+
+```
+
+De cette manière vous devriez pouvoir naviguer sans problème.
+
+### ng-content
+
+
 
 
