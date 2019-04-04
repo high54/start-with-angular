@@ -1137,7 +1137,64 @@ Maintenant vous devriez pouvoir y accéder facilement. Mais il serait bon d'ajou
 
 De cette manière vous devriez pouvoir naviguer sans problème.
 
-### ng-content
+## ng-content
+
+Actuellement vous avez découvert les bases d'Angular de manière avancée, mais le module reste simple.
+Dans ce chapitre nous allons mettre en place un ng-content afin de placer le bouton retour de façon personnalisé.
+
+/modules/news/pages/news-item/news-item.component.html
+```
+<div class="news-item">
+    <div *ngIf="article$ | async as article">
+        <news-article-display [article]="article">
+            <a routerLink="../">Retour</a>
+        </news-article-display>
+        <news-article-author [author]="article?.author"></news-article-author>
+    </div>
+    <news-article-comments *ngFor="let comment of (comments$ | async)" [comment]="comment">
+    </news-article-comments>
+</div>
+
+```
+
+J'ai mis la balise "<a></a>" dans entre le sélecteur du composant "<news-article-display> </news-article-display>".
+Si vous vous rendez sur la page : ```http://localhost:4200/news/1``` le lien de retour n'apparait plus.
+
+Pour remédier à cela, il suffit de placer dans le composant article-display une balise ng-content :
+
+```
+<div class="article-display">
+    <ng-content></ng-content>
+    <h2>{{article.title}}</h2>
+    <p>{{article.content}}</p>
+</div>
+```
+Voilà, notre lien refait surface ! Et il est possible de le placer un peu ou bon nous semble via la balise ng-content.
+Cependant imaginons que je souhaite passer plusieurs balises dans le composant, ils seront tous placer à l'endroit de la balise ng-content.
+
+### ng-content et son sélecteur
+
+La balise ng-content dispose elle aussi d'un sélecteur :
+
+```
+<ng-content select="a"></ng-content>
+```
+Ainsi dans cet exemple, je vais pouvoir sélectionner une balise "a" pour l'afficher.
+
+Le sélecteur de ng-content permet de sélectionner toutes les balises HTML, les class CSS, les ID ainsi que d'autre composant.
+
+Autant en profiter et placer le ng-content sous le titre de l'article :
+
+```
+<div class="article-display">
+    <h2>{{article.title}}</h2>
+    <ng-content select="a"></ng-content>
+    <p>{{article.content}}</p>
+</div>
+```
+
+
+
 
 
 

@@ -1,7 +1,8 @@
 <div class="news-item">
-    <a routerLink="../">Retour</a>
     <div *ngIf="article$ | async as article">
-        <news-article-display [article]="article"></news-article-display>
+        <news-article-display [article]="article">
+            <a routerLink="../">Retour</a>
+        </news-article-display>
         <news-article-author [author]="article?.author"></news-article-author>
     </div>
     <news-article-comments *ngFor="let comment of (comments$ | async)" [comment]="comment">
