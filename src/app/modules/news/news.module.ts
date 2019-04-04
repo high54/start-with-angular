@@ -17,6 +17,9 @@ import { NewsRoutingModule } from './news-routing.module';
 // Pipes
 import * as fromPipes from './pipes';
 
+// Directives
+import * as fromDirectives from './directives';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -26,7 +29,8 @@ import * as fromPipes from './pipes';
     declarations: [
         ...fromPages.pages,
         ...fromComponents.components,
-        ...fromPipes.pipes
+        ...fromPipes.pipes,
+        ...fromDirectives.directives
     ],
     providers: [
         ...fromServices.services

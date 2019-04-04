@@ -1298,6 +1298,121 @@ Pour tester le pipe, il suffit d'ajouter le mot "Andouille" dans le contenu d'un
 
 Une directive contrairement à un pipe permet de modifier le DOM. Nous allons utiliser l'exemple présent sur la documentation officiel d'Angular afin d'ajouter une directive qui va permettre de mettre en surbrillance l'auteur d'un article.
 
+Dans le dossiers directives du modules news :
+
+/modules/news/directives/highlight/highlight.directive.ts
+```
+import { Directive, ElementRef, HostListener } from "@angular/core";
+
+@Directive({
+    selector: '[newsHighlight]'
+})
+export class HighlightDirective {
+    constructor(
+        private el: ElementRef
+    ) { }
+    @HostListener('mouseenter') onMouseEnter() {
+        this.highlight('yellow');
+    }
+
+    @HostListener('mouseleave') onMouseLeave() {
+        this.highlight(null);
+    }
+
+    private highlight(color: string) {
+        this.el.nativeElement.style.backgroundColor = color;
+    }
+}
+
+```
+
+Ainsi nous avons déclaré une directive qui une fois placée sur une balise va définir le background-color de cette dernière suite à un survole.
+
+ElementRef va récupérer l'élément sur lequel effectuer la transformation, nous pouvons donc interagir avec le DOM.
+@HostListener ce décorateur vous permet de vous abonner aux événements de l'élément DOM qui héberge la directive. Dans notre cas nous nous abonnons aux événement mouse enter et mouse leave.
+
+Ainsi quand l'utilisateur va passer la souris sur l'auteur de l'article, l'événement vat être déclenché. De même quand la souris quittera la zone du nom de l'auteur.
+
+
+Pour que cette directive soit opérationnelle il nous reste deux étapes :
+- Déclarer la directive dans le module
+- Utiliser la directive dans le composant
+
+Pour déclarer la directive, nous utilisons encore un fichier index.ts. Cela n'est pas forcément utile quand il y a peu d'élément mais c'est une bonne pratique à prendre. Vous l'avez certainement déjà remarqué, mais le fichier news.module.ts est facilement lisible.
+
+
+/modules/news/directives/index.ts
+```
+
+import { HighlightDirective } from './highlight/highlight.directive';
+
+export const directives: any[] = [
+    HighlightDirective
+];
+
+export * from './highlight/highlight.directive';
+
+```
+
+/modules/news/news.module.ts
+```
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+
+// Pages
+import * as fromPages from './pages';
+
+// Components
+import * as fromComponents from './components';
+
+// Services
+import * as fromServices from './services';
+
+// Routes
+import { NewsRoutingModule } from './news-routing.module';
+
+// Pipes
+import * as fromPipes from './pipes';
+
+// Directives
+import * as fromDirectives from './directives';
+
+@NgModule({
+    imports: [
+        CommonModule,
+        HttpClientModule,
+        NewsRoutingModule
+    ],
+    declarations: [
+        ...fromPages.pages,
+        ...fromComponents.components,
+        ...fromPipes.pipes,
+        ...fromDirectives.directives
+    ],
+    providers: [
+        ...fromServices.services
+    ]
+})
+export class NewsModule { }
+
+``` 
+
+
+Deuxième étape, utiliser la directive :
+
+/modules/news/components/article-author/article-author.component.html
+```
+<div class="article-author">
+    <h3>Write by <span newsHighlight>{{author.fullName}}</span></h3>
+</div>
+
+```
+
+Nous pourrions imaginer une utilisation plus poussée comme par exemple, coupler la directive avec un service qui permettrais d'ajouter des liens dans un texte en fonction de certains mots qui pointerais sur d'autres articles en liens avec ces mots clés.
+
+
+
 
 
 
