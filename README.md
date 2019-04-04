@@ -1412,6 +1412,43 @@ Deuxième étape, utiliser la directive :
 Nous pourrions imaginer une utilisation plus poussée comme par exemple, coupler la directive avec un service qui permettrais d'ajouter des liens dans un texte en fonction de certains mots qui pointerais sur d'autres articles en liens avec ces mots clés.
 
 
+#### Faisons le point sur notre application.
+Actuellement, il est possible de visualiser l'ensemble des articles, d'afficher un article par son ID avec les commentaires et l'auteur. Si nous survolons le nom de l'auteur, il passe en surbrillance. Concernant les commentaires, un filtre est en place pour censurer.
+
+Nous avons mis en place des pages, qui utilise des composants, des pipes, une directive, des routes, ainsi que des services.
+
+Pour aller plus loin et enfin pouvoir mettre en place des guards, nous allons ajouter une partie administration.
+Mais également la possibilité d'ajouter des commentaires à une news via un formulaire. Ce qui va nous permettre d'ajouter une section dans l'administration pour modérer les commentaires.
+
+## News Administration
+
+Cette administration va nous permettre d'ajouter, afficher, modifier ou supprimer un article (un CRUD).
+
+Le point d'entrée de l'administration sera situé dans le dossier pages/news-admin. Cette page est préfixée par "news" pour bien différencié des autres pages d'administration que l'application pourrait contenir.
+
+- modules
+    - news
+        - pages
+            - news-admin
+
+news-admin affichera en premier la liste des articles dans un tableau avec des boutons pour effectuer les actions de suppression et d'édition. Un menu sera présent pour accéder aux fonctionnalités :
+- Modérer les commentaires
+- Gérer les articles
+
+
+Nous allons utiliser un router-outlet auxiliaire afin de ne jamais avoir besoin de quitter la page news-admin pour effectuer toutes les opérations.
+
+/modules/news/pages/news-admin/news-admin.component.html
+```
+<div class="news-admin">
+    <div class="nav">
+        <a [routerLink]="[{ outlets: { newsAdmin: ['modarate-comments'] } }]">Modérer les commentaires</a>
+        <a [routerLink]="[{ outlets: { newsAdmin: ['manage-articles'] } }]">Gérer les articles</a>
+    </div>
+    <router-outler name="newsAdmin"></router-outler>
+</div>
+
+```
 
 
 

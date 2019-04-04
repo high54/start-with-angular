@@ -11,8 +11,16 @@ export const routes: Routes = [
     component: fromPages.NewsComponent
   },
   {
+    path: 'admin',
+    component: fromPages.NewsAdminComponent
+  },
+  {
     path: ':articleId',
     component: fromPages.NewsItemComponent
+  },
+  {
+    path: 'admin',
+    component: fromPages.NewsAdminComponent
   }
 ];
 

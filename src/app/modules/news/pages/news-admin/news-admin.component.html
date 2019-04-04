@@ -1,0 +1,7 @@
+<div class="news-admin">
+    <div class="nav">
+        <a [routerLink]="[{ outlets: { newsAdmin: ['modarate-comments'] } }]">Modérer les commentaires</a> - 
+        <a [routerLink]="[{ outlets: { newsAdmin: ['manage-articles'] } }]">Gérer les articles</a>
+    </div>
+    <router-outlet name="newsAdmin"></router-outlet>
+</div>
