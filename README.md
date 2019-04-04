@@ -4,7 +4,7 @@ Dans ce cours nous allons mettre en place notre environnement de travail ainsi q
 ## Mise en de l'environnement
 
 ### IDE
-Je vous conseil fortement l'utilisation de Visual Studio Code pour suivre le cours :
+Je vous conseille fortement l'utilisation de Visual Studio Code pour suivre le cours :
 https://code.visualstudio.com/ alias VSCode
 
 ### Extensions
@@ -44,14 +44,14 @@ https://nodejs.org/en/
 
 Angular CLI version 7.3.7
 
-Dans un premier temps il est nécéssaire d'installer Node.js.
+Dans un premier temps il est nécessaire d'installer Node.js.
 
-Personnelement je travail dans un répertoire nommé "workspace" situé à la racine du disque C.
+Personnellement je travaille dans un répertoire nommé "workspace" situé à la racine du disque C.
 Dans le répertoire workspace, j'ai un répertoire "Angular". C'est ici que nous allons mettre en place nos différents projets sous Angular.
 
 Dans le dossier Angular, ouvrir une invite de commandes :
 SHIFT + CLIC DROIT dans la fenêtre puis : Ouvrir la fenêtre PowerShell ici.
-ou
+Ou
 Taper "cmd" dans la barre d'adresse du dossier.
 
 Ces deux actions vont avoir pour effet d'ouvrir une invte de commande dans le répertoire courant.
@@ -71,22 +71,22 @@ Pour le style : SASS
 
 Nous avons à disposition l'architecture de base d'une application Angular.
 
-Pour permettre la maintenabilitée, ainsi que pour faciliter l'expension de l'application nous allons l'architecturer de sorte que chaque "composant" soit un module qu'il est possible de brancher, débrancher en quelques secondes.
+Pour permettre la maintenabilité, ainsi que pour faciliter l'expansion de l'application nous allons l'architecturer de sorte que chaque "composant" soit un module qu'il est possible de brancher, débrancher en quelques secondes.
 
 Pour mettre en place une architecture évolutive, nous allons créer un dossier nommé "modules" à l'intérieur du dossier "app".
 Dans le dossier modules, nous allons développer ou simplement déposer les fonctionnalités de notre application.
 
 ## Module évolutif
 
-Un module évolutif est un composant complexe, que l'on peu presque identifier comme une application à part entière.
-Le module va communiquer principalement avec un module nommé "core" qui fera le pont entre les différents modules qui on besoin d'intéraction entre eux.
+Un module évolutif est un composant complexe, que l'on peut presque identifier comme une application à part entière.
+Le module va communiquer principalement avec un module nommé "core" qui fera le pont entre les différents modules qui ont besoin d'interaction entre eux.
 Cependant il peut être totalement indépendant du reste de l'application.
 
-Prenons pas exemple une application qui à plusieurs utilités :
+Prenons par exemple une application qui à plusieurs utilités :
 - 1 Gérer des actualités / billets de blog
 - 2 Vendre des objets
 
-On peu identifier deux features modules :
+On peut identifier deux features modules :
 -  news
 -  shop
 
@@ -95,7 +95,7 @@ Il nous faudra certainement un autre module pour effectuer l'authentification d'
 - auth
 
 Pourquoi ne pas intégrer directement l'authentification dans le module shop ? Car il est probable que l'on utilise l'authentification pour plusieurs raisons. Par exemple, gérer les news ou identifier un utilisateur pour les commentaires des news.
-Le module "auth" sera quand à lui placé dans le "core" de notre application afin de communiquer entre les différents modules.
+Le module "auth" sera quant à lui placé dans le "core" de notre application afin de communiquer entre les différents modules.
 
 Voici l'architecture d'un module :
 - news
@@ -109,12 +109,12 @@ Voici l'architecture d'un module :
     - news-routing.module.ts
     - news.module.ts
 
-Le module news dispose de sont propre gestionnaire de module ainsi que de ces routes.
-Il est composé de composant qui sont inclus dans des containers ou "pages", de services pouvant faire appelle à des API, des pipes et des directives pour modifier le contenu des composants, des modèles de données ainsi que des guards pour vérouiller les différentes pages.
+Le module news dispose de son propre gestionnaire de module ainsi que de ces routes.
+Il est composé de composant qui sont inclus dans des containers ou "pages", de services pouvant faire appel à des API, des pipes et des directives pour modifier le contenu des composants, des modèles de données ainsi que des guards pour verrouiller les différentes pages.
 
 Il suffit simplement de connecter une route dans le fichier app-routing.module.ts pointant vers le fichier news.module.ts pour connecter le module au reste de l'application.
 
-Chaque dossier est composé de sous dossier correspondant à une fonctionnalitée.
+Chaque dossier est composé de sous dossier correspondant à une fonctionnalité.
 
 
 
@@ -139,7 +139,7 @@ Dans le dossier containers ou pages :
         - news-item.component.spec.ts
         - news-item.component.ts
 
-La page "news" sera le point d'entré de notre module. C'est ici que nous afficheront la liste des articles.
+La page "news" sera le point d'entrée de notre module. C'est ici que nous afficheront la liste des articles.
 
 Cette page affichera un composant :
 
@@ -148,7 +148,7 @@ Cette page affichera un composant :
 
 Eventuellement elle pourra afficher d'autres composants, par exemple un bandeau avec les articles les plus lus.
 
-La page news-item quand à elle affichera les composants suivant :
+La page news-item quant à elle affichera les composants suivants :
 
 - components
     - article-display
@@ -165,14 +165,14 @@ Le module disposera de deux services :
         - comment.service.ts
         - comment.service.spec.ts
 
-__Article.service__ va nous permettre d'effectuer une requête pour récupèrer la liste des artiles ainsi qu'une requête pour récupèrer un article par son ID.
+__Article.service__ va nous permettre d'effectuer une requête pour récupérer la liste des artiles ainsi qu'une requête pour récupérer un article par son ID.
 
-__Comment.service__ va quand à lui récupèrer les commentaires via l'ID d'un article. Nous pourrions inclure les commentaires avec l'article, mais par soucis de performance, et en cas d'indisponibilité du service, il est préférable de séparer les commentaires d'un article.
+__Comment.service__ va quant à lui récupérer les commentaires via l'ID d'un article. Nous pourrions inclure les commentaires avec l'article, mais par soucis de performance, et en cas d'indisponibilité du service, il est préférable de séparer les commentaires d'un article.
 
 
 ## JSON-SERVER
 
-Afin de simuler la présence d'une API, je vous conseil l'utilisation de json-server :
+Afin de simuler la présence d'une API, je vous conseille l'utilisation de json-server :
 
 ```
 npm i -g json-server
@@ -202,12 +202,12 @@ Et les commentaires :
 http://localhost:3000/comments
 ```
 
-Nous allons pouvoir effectuer toutes les requêtes GET, POST, PUT, DELETE que nous souhaitons et les données seront persistantent.
+Nous allons pouvoir effectuer toutes les requêtes GET, POST, PUT, DELETE que nous souhaitons et les données seront persistantes.
 
 
 ## Affichage des news
 
-Nous allons nous concentrer sur le point d'entré de notre module, à savoir la page "news" et le composant "article-short-display".
+Nous allons nous concentrer sur le point d'entrée de notre module, à savoir la page "news" et le composant "article-short-display".
 
 Ne pas confondre le module news et la pages news !
 
@@ -236,7 +236,7 @@ Récap de l'architecture :
 
 Vous l'aurez surement remarqué, nous avons des fichiers _index.ts_ dans les dossiers qui ne sont pas vide.
 
-Je les ais ajouté afin de faciliter la lecture du code quand le module va grossir.
+Je les ai ajouté afin de faciliter la lecture du code quand le module va grossir.
 
 Voici le code du fichier article-short-display :
 
@@ -257,11 +257,11 @@ export class NewsArticleShortDisplayComponent {
 
 1- Le selector est préfixé par le nom du module "news"
 2- Le nom de la classe est préfixée par le nom du module "News"
-3- Le nom de la classe est sufixée par le rôle de la classe "Component"
+3- Le nom de la classe est suffixée par le rôle de la classe "Component"
 
 ### index.ts explications
 
-Dans le dossier components nous avons un fichier index.ts qui va importer tous les composants et les exporters en une seule variable. Plutôt pratique pour aérer le fichier news.module.ts.
+Dans le dossier components nous avons un fichier index.ts qui va importer tous les composants et les exporter en une seule variable. Plutôt pratique pour aérer le fichier news.module.ts.
 
 /components/index.ts
 ```
@@ -392,7 +392,7 @@ export interface Article {
 
 ### Routes
 
-Nous allons configurer une première route qui va pointer vers notre page "news":
+Nous allons configurer une première route qui va pointer vers notre page "news » :
 
 /news-routing.module.ts
 ```
@@ -482,7 +482,7 @@ export class AppRoutingModule { }
 
 ```
 
-À partir de maintenant, le module est accessible via la route "news". L'intégralité du module est chargé en mode "lazy-load" afin de maximiser les performances de l'application. Il sera possible de changer la stratégie de chargement plustard, pour éventuellement pré charger le module.
+À partir de maintenant, le module est accessible via la route "news". L'intégralité du module est chargée en mode "lazy-load" afin de maximiser les performances de l'application. Il sera possible de changer la stratégie de chargement plus tard, pour éventuellement pré charger le module.
 
 Si vous souhaitez gagner du temps lors de ce cours, vous pouvez ajouter une route au fichier app-routing.module.ts afin d'afficher directement le module "news" !
 
@@ -516,7 +516,7 @@ Le projet devrait s'ouvrir sur votre navigateur à l'adresse suivante :
 http://localhost:4200
 ```
 
-Actuellement il n'i a pas de contenu, d'ailleur vous pouvez supprimer le contenu du fichier app.component.html pour ne laisser que la balise router-outlet :
+Actuellement il n'i a pas de contenu, d'ailleurs vous pouvez supprimer le contenu du fichier app.component.html pour ne laisser que la balise router-outlet :
 
 /src/app/app.component.html
 ```
@@ -593,16 +593,16 @@ export class NewsComponent implements OnInit {
 
 ```
 
-Notre composant implémente OnInit et déclare une nouvelle méthode ngOnInit() afin de respécter le cicle de vie d'Angular.
+Notre composant implémente OnInit et déclare une nouvelle méthode ngOnInit() afin de respecter le cycle de vie d'Angular.
 
-Nous avons une variable __articles$__ qui n'a pas de modifieur donc elle est public.
+Nous avons une variable __articles$__ qui n'a pas de modificateur donc elle est public.
 
 __articles$__ est suffixé par le symbole "$". Il s'agit d'une convention de nommage pour facilement identifier les observables.
 
 __articles$__ est initialisé dans la méthode ngOnInit() qui utilise la méthode getArticles() de notre service.
 
-Nous l'utiliseront directement dans le template avec le pipe "async" qui est spécialement dédier aux promesses et aux observables.
-L'autre solution consiste à souscrire directement à la méthode getArticles() dans la méthode ngOnInit et d'implémenter le cicle de vie OnDestroy afin de déclarer la méthode ngOnDestroy pour nous désinscrire de getArticles() afin d'éviter des fuites de mémoire.
+Nous l’utiliserons directement dans le template avec le pipe "async" qui est spécialement dédier aux promesses et aux observables.
+L'autre solution consiste à souscrire directement à la méthode getArticles() dans la méthode ngOnInit et d'implémenter le cycle de vie OnDestroy afin de déclarer la méthode ngOnDestroy pour nous désinscrire de getArticles() afin d'éviter des fuites de mémoire.
 Mais le pipe "async" est spécialement dédié à cela.
 
 
@@ -621,7 +621,7 @@ Voyons le template de la page news :
 Nous utilisons le selecteur du composant article-short-display et nous effectuons une boucle sur la liste de nos articles via "*ngFor", qui va passer un par un les articles à notre composant article-short-display.
 Cela va avoir pour conséquence d'afficher autant de fois le composant article-short-display qu'il y a d'articles.
 
-À ce stade, l'application n'affichera pas encore d'information. Pour palier à cela nous devons nous occuper du composant:
+À ce stade, l'application n'affichera pas encore d'information. Pour pallier à cela nous devons nous occuper du composant :
 
 /modules/news/components/article-short-display/article-short-display.ts
 ```
@@ -639,7 +639,7 @@ export class NewsArticleShortDisplayComponent {
 }
 ```
 
-Il n'y a qu'une chose à mettre en place dans le fichier TS du composant, à savoir un "Input". Celui ci indique que le composant va recevoir du parent une variable nommé "article".
+Il n'y a qu'une chose à mettre en place dans le fichier TS du composant, à savoir un "Input". Celui-ci indique que le composant va recevoir du parent une variable nommé "article".
 
 Dans le fichier HTML de notre page "news", nous avons indiqué [article] c'est le nom de la variable que nous allons récupérer dans le composant article-short-display. Puis nous avons indiqué une valeur à cette variable [article]="article".
 Cette valeur, nommé aussi article est l'objet article qui est généré via le ngFor.
@@ -649,7 +649,7 @@ Le nom de la valeur à peu d'importance. Nous aurions pu écrire :
 ```
 Du moment que toto contient un article.
 
-Maintenant, grace à "Input()", nous disposons de toutes les données d'un article dans notre composant, il est donc temps d'afficher les informations :
+Maintenant, via "Input()", nous disposons de toutes les données d'un article dans notre composant, il est donc temps d'afficher les informations :
 
 /modules/news/components/article-short-display/article-short-display.html
 ```
@@ -659,7 +659,7 @@ Maintenant, grace à "Input()", nous disposons de toutes les données d'un artic
 </div>
 
 ```
-Et voila, nos deux articles s'affichent enfin dans notre application.
+Et voilà, nos deux articles s'affichent enfin dans notre application.
 
 Le plus dur jusqu'à présent a été de mettre en place une structure facilement maintenable et évolutive.
 
@@ -721,7 +721,7 @@ export * from './news-item/news-item.component';
 
 ```
 
-Profitons en pour ajouter une nouvelle route dans le fichier news-routing.module :
+Profitons-en pour ajouter une nouvelle route dans le fichier news-routing.module :
 
 /modules/news/news-routing.module.ts
 ```
@@ -752,11 +752,11 @@ export class NewsRoutingModule { }
 
 ```
 
-Cette nouvelle route prends dans le "path" une valeur préfixée par deux points ":". cette valeur correspond à l'ID que nous afficherons sur la page. Le nom de la valeur ici "articleId" est très importante, car c'est via ce nom que nous allons récupèrer l'ID.
+Cette nouvelle route prends dans le "path" une valeur préfixée par deux points ":". Cette valeur correspond à l'ID que nous afficherons sur la page. Le nom de la valeur ici "articleId" est très importante, car c'est via ce nom que nous allons récupérer l'ID.
 
 Enfin, cette route pointe sur notre nouveau composant NewsItemComponent.
 
-Cette page va afficher plusieurs composants, nous allons les mettrent en place :
+Cette page va afficher plusieurs composants, nous allons les mettre en place :
 
 /modules/news/components/article-dispay/article-display.component.ts
 ```
@@ -858,7 +858,7 @@ export interface Article {
 ```
 
 
-Profitons en pour ajouter l'interface pour les commentaires :
+Profitons-en pour ajouter l'interface pour les commentaires :
 
 /modules/news/models/comment.interface.ts
 ```
@@ -920,7 +920,7 @@ export * from './article-comments/article-comments.component';
 
 ```
 
-Afin de récupèrer les commentaires, nous allons avoir besoin d'un service :
+Afin de récupérer les commentaires, nous allons avoir besoin d'un service :
 
 /modules/news/services/comment/comment.service.ts
 ```
@@ -1044,9 +1044,9 @@ db.json
 ```
 
 
-Maintenant que nous avons mis en place de quoi récupèrer les commentaires, il serait bon d'afficher notre article avec l'auteur et les commentaires.
+Maintenant que nous avons mis en place de quoi récupérer les commentaires, il serait bon d'afficher notre article avec l'auteur et les commentaires.
 
-Nous allons modifier la page news-item pour faire appelle à nos composants :
+Nous allons modifier la page news-item pour faire appel à nos composants :
 
 /modules/news/pages/news-item.component.ts
 ```
@@ -1087,7 +1087,7 @@ export class NewsItemComponent implements OnInit {
 
 ```
 
-Ici nous utilisons le service des commentaires afin de les récupèrer.
+Ici nous utilisons le service des commentaires afin de les récupérer.
 
 /modules/news/pages/news-item.component.html
 ```
@@ -1107,7 +1107,7 @@ Dans le template nous ajoutons une div avec un "*ngIf" afin de vérifier la pré
 
 Il ne manque plus qu'une chose pour pouvoir accéder à un article via son ID. Cependant vous pouvez y accéder directement via la barre d'adresse du navigateur en ajoutant "/1" à l'URL.
 
-Dans le point d'entré du module, à savoir la page "news", il nous faut ajouter un lien vers l'article complet. Le composant article-short-display étant dédié à l'affichage des articles dans la page "news", c'est dans sont template que nous ajoutons le lien :
+Dans le point d'entrée du module, à savoir la page "news", il nous faut ajouter un lien vers l'article complet. Le composant article-short-display étant dédié à l'affichage des articles dans la page "news", c'est dans son template que nous ajoutons le lien :
 
 /modules/news/components/article-short-display/article-short-display.component.html
 ```
