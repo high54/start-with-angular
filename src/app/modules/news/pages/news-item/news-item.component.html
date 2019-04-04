@@ -1,4 +1,5 @@
 <div class="news-item">
+    <a routerLink="../">Retour</a>
     <div *ngIf="article$ | async as article">
         <news-article-display [article]="article"></news-article-display>
         <news-article-author [author]="article?.author"></news-article-author>
