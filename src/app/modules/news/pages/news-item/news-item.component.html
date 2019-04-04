@@ -1,0 +1,8 @@
+<div class="news-item">
+    <div *ngIf="article$ | async as article">
+        <news-article-display [article]="article"></news-article-display>
+        <news-article-author [author]="article?.author"></news-article-author>
+    </div>
+    <news-article-comments *ngFor="let comment of (comments$ | async)" [comment]="comment">
+    </news-article-comments>
+</div>

@@ -1,0 +1,5 @@
+<div class="news">
+    <h1>News</h1>
+    <news-article-short-dsiplay *ngFor="let article of (articles$ | async)" [article]="article">
+    </news-article-short-dsiplay>
+</div>
