@@ -1162,6 +1162,7 @@ Si vous vous rendez sur la page : ```http://localhost:4200/news/1``` le lien de 
 
 Pour remédier à cela, il suffit de placer dans le composant article-display une balise ng-content :
 
+/modules/news/components/article-display/article-display.component.html
 ```
 <div class="article-display">
     <ng-content></ng-content>
@@ -1185,6 +1186,7 @@ Le sélecteur de ng-content permet de sélectionner toutes les balises HTML, les
 
 Autant en profiter et placer le ng-content sous le titre de l'article :
 
+/modules/news/components/article-display/article-display.component.html
 ```
 <div class="article-display">
     <h2>{{article.title}}</h2>
@@ -1192,6 +1194,110 @@ Autant en profiter et placer le ng-content sous le titre de l'article :
     <p>{{article.content}}</p>
 </div>
 ```
+
+## Pipes
+
+Un pipe permet de transformer des données, il ne s'occupe pas du DOM. Jusqu'a présent nous avons utilisé le pipe "async", mais pourquoi ne pas mettre en place un pipe pour filtrer les commentaires.
+
+Dans le dossier pipes du module news :
+
+/modules/news/pipes/comment-filter/comment-filter.pipe.ts
+```
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+    name: 'commentFilter'
+})
+export class CommentFilterPipe implements PipeTransform {
+    transform(value: any) {
+        return value.replace(new RegExp('Andouille'), '*$ù^"@&-"');
+    }
+}
+
+```
+
+Le pipe est plutôt simple,  il va remplacer dans une valeur donnée, ici le mot "Andouille" par une chaine de caractères.
+
+
+/modules/news/pipes/index.ts
+```
+import { CommentFilterPipe } from './comment-filter/comment-filter.pipe';
+
+export const pipes: any[] = [
+    CommentFilterPipe
+];
+
+export * from './comment-filter/comment-filter.pipe';
+
+```
+
+/modules/news/news.modules.ts
+```
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+
+// Pages
+import * as fromPages from './pages';
+
+// Components
+import * as fromComponents from './components';
+
+// Services
+import * as fromServices from './services';
+
+// Routes
+import { NewsRoutingModule } from './news-routing.module';
+
+// Pipes
+import * as fromPipes from './pipes';
+
+@NgModule({
+    imports: [
+        CommonModule,
+        HttpClientModule,
+        NewsRoutingModule
+    ],
+    declarations: [
+        ...fromPages.pages,
+        ...fromComponents.components,
+        ...fromPipes.pipes
+    ],
+    providers: [
+        ...fromServices.services
+    ]
+})
+export class NewsModule { }
+
+```
+
+Maintenant que le pipe est configuré ainsi que déclaré nous pouvons l'utiliser :
+
+/modules/news/components/article-comments/article-comments.component.html
+```
+<div class="article-comments">
+    <h4>{{comment.author.fullName}}</h4>
+    <p>{{comment.content | commentFilter}}</p>
+</div>
+```
+
+Pour tester le pipe, il suffit d'ajouter le mot "Andouille" dans le contenu d'un commentaire du fichier db.json
+
+```
+        {
+            "id":1,
+            "author":{
+                "fullName":"Author 3"
+            },
+            "content":"Contenu du commentaire 1, Andouille !",
+            "articleId":1
+        }
+```
+
+
+
+
+
 
 
 
