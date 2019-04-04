@@ -1157,7 +1157,7 @@ Dans ce chapitre nous allons mettre en place un ng-content afin de placer le bou
 
 ```
 
-J'ai mis la balise "<a></a>" dans entre le sélecteur du composant "<news-article-display> </news-article-display>".
+J'ai mis la balise ```<a></a>``` dans entre le sélecteur du composant ```<news-article-display> </news-article-display>```.
 Si vous vous rendez sur la page : ```http://localhost:4200/news/1``` le lien de retour n'apparait plus.
 
 Pour remédier à cela, il suffit de placer dans le composant article-display une balise ng-content :
