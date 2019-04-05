@@ -761,7 +761,7 @@ Cette nouvelle route prends dans le "path" une valeur préfixée par deux points
 Enfin, cette route pointe sur notre nouveau composant NewsItemComponent.
 
 Cette page va afficher plusieurs composants, nous allons les mettre en place :
-
+### article-display composant
 /modules/news/components/article-dispay/article-display.component.ts
 ```
 import { Component, Input } from '@angular/core';
@@ -781,6 +781,7 @@ export class NewsArticleDisplayComponent {
 }
 
 ```
+Le composant prends en entré (@Input()) un article. Cela va nous permettre d'afficher les informations de l'article dans le template :
 
 /modules/news/components/article-dispay/article-display.component.html
 ```
@@ -790,7 +791,7 @@ export class NewsArticleDisplayComponent {
 </div>
 
 ```
-
+### article-author composant
 /modules/news/components/article-author/article-author.component.ts
 ```
 import { Component, Input } from '@angular/core';
@@ -809,6 +810,7 @@ export class NewsArticleAuthorComponent {
 }
 
 ```
+Ici c'est l'auteur qui est passé au composant (@Input() author) afin d'afficher la propriétée "fullName" de l'objet Author :
 
 /modules/news/components/article-author/article-author.component.html
 ```
@@ -836,9 +838,11 @@ export * from './article-author/article-author.component';
 
 ```
 
+Evidemment le fichier index.ts des composants est mis à jour.
+
 
 Etant donné que nous avons ajouté l'auteur de l'article, nous allons ajouter une interface et modifier l'interface des articles :
-
+### author interface
 /modules/news/models/author.interface.ts
 ```
 export interface Author {
@@ -862,6 +866,7 @@ export interface Article {
 ```
 
 
+### comment interface
 Profitons-en pour ajouter l'interface pour les commentaires :
 
 /modules/news/models/comment.interface.ts
@@ -877,6 +882,7 @@ export interface Comment {
 
 ```
 
+### article-comments composant
 Enfin pour terminer avec les composants, nous pouvons ajouter article-comments :
 
 /modules/news/components/article-comments/article-comments.components.ts
@@ -894,6 +900,7 @@ export class NewsArticleCommentsComponent {
 }
 
 ```
+article-comments prends en entré un commentaire : ```@Input() comment: Comment``` afin d'afficher les informations dans le template :
 
 /modules/news/components/article-comments/article-comments.components.html
 ```
@@ -923,7 +930,7 @@ export * from './article-author/article-author.component';
 export * from './article-comments/article-comments.component';
 
 ```
-
+### comment service
 Afin de récupérer les commentaires, nous allons avoir besoin d'un service :
 
 /modules/news/services/comment/comment.service.ts
@@ -968,6 +975,7 @@ export class CommentService {
 
 
 ```
+C'est un service assez standard, il permet d'effectuer un CRUD complet sur les commentaires via des requêtes HTTP.
 
 Le fichier index.ts des services :
 
@@ -984,6 +992,8 @@ export * from './article/article.service';
 export * from './comment/comment.service';
 
 ```
+
+### DB.JSON
 
 Nous pouvons dès à présent modifier notre base de données afin d'y inclure des commentaires :
 
@@ -1459,10 +1469,129 @@ Nous allons utiliser un router-outlet auxiliaire afin de ne jamais avoir besoin 
 Dans un premier temps nous allons mettre en place un composant pour afficher dans un tableau les articles et ainsi avoir une vue d'ensemble. Il nous sera possible d'accéder au formulaire d'ajout ou d'édition ainsi que de supprimer un article via des boutons.
 
 /modules/news/components/manage-articles/manage-articles.component.ts
+```
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+// Rxjs
+import { Observable } from 'rxjs';
+// Services
+import { ArticleService } from '../../services';
+// Models
+import { Article } from '../../models/article.interface';
+
+@Component({
+    selector: 'news-manage-article',
+    styleUrls: ['manage-article.component.scss'],
+    templateUrl: 'manage-article.component.html',
+})
+export class NewsManageArticlesComponent implements OnInit {
+    articles$: Observable<Article[]>;
+    constructor(
+        private articleService: ArticleService,
+        private router: Router
+    ) { }
+    /**
+     * Fait référence à la méthode qui utilise ArticleService
+     */
+    ngOnInit(): void {
+        this.fetchData();
+    }
+    /**
+     * Redirige l'utilisateur sur le composant "article-form"
+     */
+    addArticle(): void {
+        this.router.navigate(['/news/admin/', { outlets: { 'news-admin': ['article-form'] } }]);
+    }
+    /**
+     * Redirige l'utilisateur sur le composant "article-form" avec l'ID de l'article à modifier
+     * @param article Article Object
+     */
+    editArticle(article: Article): void {
+        this.router.navigate(['/news/admin/', { outlets: { 'news-admin': ['article-form', article.id] } }]);
+
+    }
+
+    /**
+     * Effectue une demande de confirmation avant de supprimer un article.
+     * Utilise le service ArticleService pour effectuer une requête HTTP à l'API
+     * @param article Article object
+     */
+    removeArticle(article: Article) {
+        const remove = window.confirm(`Êtes-vous sur de vouloir supprimer l'article ?`);
+        if (remove) {
+            this.articleService.removeArticle(article).toPromise().then((removeArticleResponse) => {
+                this.fetchData();
+            }, (removeArticleRej) => {
+                window.confirm(removeArticleRej);
+            });
+        }
+    }
+    /**
+     * Utilise ArticleService pour récupérer les articles
+     */
+    private fetchData(): void {
+        this.articles$ = this.articleService.getArticles();
+    }
+
+}
+
+```
+
+Ici nous avons les opérations Ajouter, Modifier et Supprimer. L'affichage s'effectue directement dans le template, sans traitement préalable.
+
+L'utilisation du service ArticleService ne s'effectue pas directement dans ngOnInit, le service est utilisé dans une méthode fetchData qui doit être réutilisé plus tard lors de la suppression d'un article afin de mettre à jour la liste.
+
+```addArticle(): void ``` Utilise la navigation afin d'afficher le composant article-form dans le router-outlet auxiliaire.
+Ainsi l'utilisateur ne quitte jamais la page d'administration pour effectuer toutes les opérations.
 
 
+```editArticle(article: Article): void ``` Comme la méthode précédente, nous utilisons la navigation pour afficher le composant article-form sur le router-outler auxiliaire. La particularité ici, est la présence d'un paramètre, l'ID de l'article qui sera modifié.
 
 
+```removeArticle(article: Article): void``` Effectue dans un premier temps une demande de confirmation, puis dans un second temps, si la demande de confirmation a été validé, supprime l'article passé en paramètre. Tout comme ```ngOnInit()``` nous utilisons la méthode ```fetchData(): void``` afin de récupérer la liste des articles une fois mise à jour.
+Nous pourrions effectuer un traitement sur la liste des articles déjà présent pour retirer l'article supprimer, mais nous travaillons à flux tendu en asynchrone avec les données.
+
+```private fetchData(): void``` C'est ici que nous utilisons ArticleService pour récupérer la liste de nos articles.
+
+
+/modules/news/components/manage-articles/manage-articles.component.html
+```
+<div class="manage-article">
+    <h2>Gestion des articles</h2>
+    <button type="button" (click)="addArticle()">Ajouter un article</button>
+    <table>
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>Edition</th>
+                <th>Suppression</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let article of (articles$ | async)">
+                <td>
+                    {{article.title}}
+                </td>
+                <td>
+                    {{article.author.fullName}}
+                </td>
+                <td>
+                    <button type="button" (click)="editArticle(article)">
+                        Editer
+                    </button>
+                </td>
+                <td>
+                    <button type="button" (click)="removeArticle(article)">
+                        Supprimer
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+```
 
 
 
