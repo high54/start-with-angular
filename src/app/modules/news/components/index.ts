@@ -2,14 +2,22 @@ import { NewsArticleShortDisplayComponent } from './article-short-display/articl
 import { NewsArticleDisplayComponent } from './article-display/article-display.component';
 import { NewsArticleAuthorComponent } from './article-author/article-author.component';
 import { NewsArticleCommentsComponent } from './article-comments/article-comments.component';
+import { NewsManageArticlesComponent } from './manage-articles/manage-article.component';
+import { NewsModerateCommentsComponent } from './moderate-comments/moderate-comments.component';
+
+
 export const components: any[] = [
     NewsArticleShortDisplayComponent,
     NewsArticleDisplayComponent,
     NewsArticleAuthorComponent,
-    NewsArticleCommentsComponent
+    NewsArticleCommentsComponent,
+    NewsManageArticlesComponent,
+    NewsModerateCommentsComponent
 ];
 
 export * from './article-short-display/article-short-display.component';
 export * from './article-display/article-display.component';
 export * from './article-author/article-author.component';
 export * from './article-comments/article-comments.component';
+export * from './manage-articles/manage-article.component';
+export * from './moderate-comments/moderate-comments.component';

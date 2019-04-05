@@ -1,0 +1,34 @@
+<div class="manage-article">
+    <h2>Gestion des articles</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>Edition</th>
+                <th>Suppression</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let article of (articles$ | async)">
+                <td>
+                    {{article.title}}
+                </td>
+                <td>
+                    {{article.author.fullName}}
+                </td>
+                <td>
+                    <button type="button" (click)="editArticle(article)">
+                        Editer
+                    </button>
+                </td>
+                <td>
+                    <button type="button" (click)="removeArticle(article)">
+                        Supprimer
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>

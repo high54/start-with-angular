@@ -165,7 +165,7 @@ Le module disposera de deux services :
         - comment.service.ts
         - comment.service.spec.ts
 
-__Article.service__ va nous permettre d'effectuer une requête pour récupérer la liste des artiles ainsi qu'une requête pour récupérer un article par son ID.
+__Article.service__ va nous permettre d'effectuer une requête pour récupérer la liste des articles ainsi qu'une requête pour récupérer un article par son ID.
 
 __Comment.service__ va quant à lui récupérer les commentaires via l'ID d'un article. Nous pourrions inclure les commentaires avec l'article, mais par soucis de performance, et en cas d'indisponibilité du service, il est préférable de séparer les commentaires d'un article.
 
@@ -238,9 +238,9 @@ Vous l'aurez surement remarqué, nous avons des fichiers _index.ts_ dans les dos
 
 Je les ai ajouté afin de faciliter la lecture du code quand le module va grossir.
 
-Voici le code du fichier article-short-display :
+Voici le code TypeScript du composant article-short-display :
 
-/components/article-short-display/article-short-display.component.ts
+/modules/news/components/article-short-display/article-short-display.component.ts
 ```
 import { Component } from '@angular/core';
 
@@ -255,15 +255,15 @@ export class NewsArticleShortDisplayComponent {
 
 ```
 
-1- Le selector est préfixé par le nom du module "news"
-2- Le nom de la classe est préfixée par le nom du module "News"
-3- Le nom de la classe est suffixée par le rôle de la classe "Component"
+- Le selector est préfixé par le nom du module "news"
+- Le nom de la classe est préfixée par le nom du module "News"
+- Le nom de la classe est suffixée par le rôle de la classe "Component"
 
 ### index.ts explications
 
 Dans le dossier components nous avons un fichier index.ts qui va importer tous les composants et les exporter en une seule variable. Plutôt pratique pour aérer le fichier news.module.ts.
 
-/components/index.ts
+/modules/news/components/index.ts
 ```
 import { NewsArticleShortDisplayComponent } from './article-short-display/article-short-display.component';
 
@@ -279,7 +279,7 @@ Ainsi nous avons à notre dispositions une constante nommée "components" qui es
 
 
 Voyons maintenant la page news :
-/pages/news/news.component.ts
+/modules/news/pages/news/news.component.ts
 ```
 import { Component } from '@angular/core';
 
@@ -295,7 +295,7 @@ export class NewsComponent {
 ```
 Le fichier index.ts du dossier "pages" :
 
-/pages/index.ts
+/modules/news/pages/index.ts
 ```
 import { NewsComponent } from './news/news.component';
 
@@ -310,7 +310,7 @@ export * from './news/news.component';
 
 Le service "article" :
 
-/services/article.service.ts
+/modules/news/services/article.service.ts
 ```
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -366,7 +366,8 @@ export class ArticleService {
 ```
 
 le fichier index.ts du dossier "services":
-/services/index.ts
+
+/modules/news/services/index.ts
 ```
 import { ArticleService } from './article/article.service';
 
@@ -392,9 +393,9 @@ export interface Article {
 
 ### Routes
 
-Nous allons configurer une première route qui va pointer vers notre page "news » :
+Nous allons configurer une première route qui va pointer vers notre page "news":
 
-/news-routing.module.ts
+/modules/news/news-routing.module.ts
 ```
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -553,7 +554,7 @@ Dans un premier temps nous allons ajouter quelques articles à notre "base de do
 
 Nous avons maintenant deux articles à notre disposition. Pour tester, vous pouvez vous rendre à l'adresse suivante sur votre navigateur :
 ```
-http://localhost:3000/news
+http://localhost:3000/articles
 ```
 
 Si la page ne s'affiche pas, lancer le serveur :
@@ -639,7 +640,7 @@ export class NewsArticleShortDisplayComponent {
 }
 ```
 
-Il n'y a qu'une chose à mettre en place dans le fichier TS du composant, à savoir un "Input". Celui-ci indique que le composant va recevoir du parent une variable nommé "article".
+Il n'y a qu'une chose à mettre en place dans le fichier TS du composant, à savoir un "Input". Celui-ci indique que le composant va recevoir du parent une variable nommé "article" avec un typage via la class "Article".
 
 Dans le fichier HTML de notre page "news", nous avons indiqué [article] c'est le nom de la variable que nous allons récupérer dans le composant article-short-display. Puis nous avons indiqué une valeur à cette variable [article]="article".
 Cette valeur, nommé aussi article est l'objet article qui est généré via le ngFor.
@@ -703,6 +704,9 @@ export class NewsItemComponent implements OnInit {
 }
 
 ```
+Dans cette page, nous injection ActivatedRoute que nous utilisons en tant que "route" pour récupérer le paramètre passé à l'URL (l'ID de notre article). Notez bien le paramètre que nous récupérons : "articleId". C'est exactement comme cela qu'il sera nommé dans le fichier news-routing.module.ts que nous modifierons après.
+Ainsi, si l'ID est présent alors via le service article nous allons récupérer un article par son ID.
+Sinon, on redirige l'utilisateur vers la page de toutes les news.
 
 Comme nous venons d'ajouter un composant dans le dossier pages, il est nécéssaire d'ajouter le composant dans le fichier index.ts :
 
@@ -1157,7 +1161,7 @@ Dans ce chapitre nous allons mettre en place un ng-content afin de placer le bou
 
 ```
 
-J'ai mis la balise ```<a></a>``` dans entre le sélecteur du composant ```<news-article-display> </news-article-display>```.
+J'ai mis la balise ```<a></a>``` entre le sélecteur du composant ```<news-article-display> </news-article-display>```.
 Si vous vous rendez sur la page : ```http://localhost:4200/news/1``` le lien de retour n'apparait plus.
 
 Pour remédier à cela, il suffit de placer dans le composant article-display une balise ng-content :
@@ -1442,13 +1446,22 @@ Nous allons utiliser un router-outlet auxiliaire afin de ne jamais avoir besoin 
 ```
 <div class="news-admin">
     <div class="nav">
-        <a [routerLink]="[{ outlets: { newsAdmin: ['modarate-comments'] } }]">Modérer les commentaires</a>
+        <a [routerLink]="[{ outlets: { newsAdmin: ['moderate-comments'] } }]">Modérer les commentaires</a>
         <a [routerLink]="[{ outlets: { newsAdmin: ['manage-articles'] } }]">Gérer les articles</a>
     </div>
     <router-outler name="newsAdmin"></router-outler>
 </div>
 
 ```
+
+### Gestion des articles
+
+Dans un premier temps nous allons mettre en place un composant pour afficher dans un tableau les articles et ainsi avoir une vue d'ensemble. Il nous sera possible d'accéder au formulaire d'ajout ou d'édition ainsi que de supprimer un article via des boutons.
+
+/modules/news/components/manage-articles/manage-articles.component.ts
+
+
+
 
 
 
