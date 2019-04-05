@@ -19,17 +19,27 @@ export const routes: Routes = [
         path: '',
         redirectTo: 'manage-articles',
         pathMatch: 'full',
-        outlet: 'newsAdmin'
+        outlet: 'news-admin'
       },
       {
         path: 'manage-articles',
         component: fromComponents.NewsManageArticlesComponent,
-        outlet: 'newsAdmin'
+        outlet: 'news-admin'
       },
       {
         path: 'moderate-comments',
         component: fromComponents.NewsModerateCommentsComponent,
-        outlet: 'newsAdmin'
+        outlet: 'news-admin'
+      },
+      {
+        path: 'article-form',
+        component: fromComponents.NewsArticleFormComponent,
+        outlet: 'news-admin'
+      },
+      {
+        path: 'article-form/:articleId',
+        component: fromComponents.NewsArticleFormComponent,
+        outlet: 'news-admin'
       }
     ]
   },

@@ -19,11 +19,13 @@ import * as fromPipes from './pipes';
 
 // Directives
 import * as fromDirectives from './directives';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
     imports: [
         CommonModule,
         HttpClientModule,
+        ReactiveFormsModule,
         NewsRoutingModule
     ],
     declarations: [

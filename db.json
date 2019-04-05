@@ -17,6 +17,15 @@
       "author": {
         "fullName": "Author 2"
       }
+    },
+    {
+      "title": "3éme article",
+      "description": "Description du 3éme article",
+      "content": "Contenu du 3éme article",
+      "author": {
+        "fullName": "Author N"
+      },
+      "id": 3
     }
   ],
   "comments": [

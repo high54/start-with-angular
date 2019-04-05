@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
+// Rxjs
+import { Observable } from 'rxjs';
 // Services
 import { ArticleService } from '../../services';
 // Models
 import { Article } from '../../models/article.interface';
-import { Router } from '@angular/router';
 
 @Component({
     selector: 'news-manage-article',
@@ -18,11 +19,25 @@ export class NewsManageArticlesComponent implements OnInit {
         private articleService: ArticleService,
         private router: Router
     ) { }
-    ngOnInit() {
+    /**
+     * Fait référence à la méthode qui utilise ArticleService
+     */
+    ngOnInit(): void {
         this.fetchData();
     }
-    editArticle(article: Article) {
-        console.log('Edition');
+    /**
+     * Redirige l'utilisateur sur le composant "article-form"
+     */
+    addArticle(): void {
+        this.router.navigate(['/news/admin/', { outlets: { 'news-admin': ['article-form'] } }]);
+    }
+    /**
+     * Redirige l'utilisateur sur le composant "article-form" avec l'ID de l'article à modifier
+     * @param article Article Object
+     */
+    editArticle(article: Article): void {
+        this.router.navigate(['/news/admin/', { outlets: { 'news-admin': ['article-form', article.id] } }]);
+
     }
 
     /**
@@ -30,17 +45,19 @@ export class NewsManageArticlesComponent implements OnInit {
      * Utilise le service ArticleService pour effectuer une requête HTTP à l'API
      * @param article Article object
      */
-    removeArticle(article: Article) {
+    removeArticle(article: Article): void {
         const remove = window.confirm(`Êtes-vous sur de vouloir supprimer l'article ?`);
         if (remove) {
             this.articleService.removeArticle(article).toPromise().then((removeArticleResponse) => {
                 this.fetchData();
-            }, (rejectRemoveArticleResponse) => {
-                console.error(rejectRemoveArticleResponse);
+            }, (removeArticleRej) => {
+                window.confirm(removeArticleRej);
             });
         }
     }
-
+    /**
+     * Utilise ArticleService pour récupérer les articles
+     */
     private fetchData(): void {
         this.articles$ = this.articleService.getArticles();
     }

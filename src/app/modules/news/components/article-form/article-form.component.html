@@ -1,0 +1,15 @@
+<div class="article-form">
+    <h3>{{title}}</h3>
+    <form [formGroup]="articleForm">
+        <label> Titre
+            <input type="text" formControlName="title">
+        </label>
+        <label>Description
+            <textarea formControlName="description"></textarea>
+        </label>
+        <label>Contenu
+            <textarea formControlName="content"></textarea>
+        </label>
+        <button type="button" (click)="addOrEditArticle(articleForm)">Enregistrer</button>
+    </form>
+</div>
