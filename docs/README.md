@@ -2,15 +2,39 @@
 # Débuter avec Angular 7+ et structure évolutive
 Dans ce cours nous allons mettre en place notre environnement de travail ainsi qu'une structure d'application évolutive.
 
-# Table of Contents
-1. [Mise en place de l'environnement](#Mise_en_place_de_lenvironnement_10)
-    1. [IDE](#IDE_18)
-    2. [Extensions](#Extensions_22)
-    3. [Installer l’environnement](#Installer_lenvironnement_47)
-    4. [Json Server](#JSONSERVER_91)
-2. [Module évolutif](#Module_volutif_125)
-    1. [News module](#News_module_167)
 
+- [Débuter avec Angular 7+ et structure évolutive](#d%C3%A9buter-avec-angular-7-et-structure-%C3%A9volutive)
+  - [Mise en place de l'environnement](#mise-en-place-de-lenvironnement)
+    - [IDE](#ide)
+    - [Extensions](#extensions)
+    - [Installer l'environnement](#installer-lenvironnement)
+    - [JSON-SERVER](#json-server)
+  - [Module évolutif](#module-%C3%A9volutif)
+    - [News module](#news-module)
+  - [Affichage des news](#affichage-des-news)
+    - [index.ts explications](#indexts-explications)
+    - [changeDetection: OnPush](#changedetection-onpush)
+    - [Routes](#routes)
+  - [news module](#news-module)
+  - [news-item](#news-item)
+    - [article-display composant](#article-display-composant)
+    - [article-author composant](#article-author-composant)
+    - [author interface](#author-interface)
+    - [comment interface](#comment-interface)
+    - [article-comments composant](#article-comments-composant)
+    - [comment service](#comment-service)
+    - [DB.JSON](#dbjson)
+  - [ng-content](#ng-content)
+    - [ng-content et son sélecteur](#ng-content-et-son-s%C3%A9lecteur)
+  - [Pipes](#pipes)
+  - [Directives](#directives)
+      - [Faisons le point sur notre application.](#faisons-le-point-sur-notre-application)
+  - [News Administration](#news-administration)
+  - [Gestion des articles](#gestion-des-articles)
+    - [manage-articles component](#manage-articles-component)
+    - [article-form](#article-form)
+  - [Gestion des commentaires](#gestion-des-commentaires)
+    - [moderate-comments](#moderate-comments)
 
 
 
@@ -1762,7 +1786,7 @@ Cette fois-ci nous mettons en place les cycles de vie ```OnInit``` et ```OnDestr
 
 
 
-### moderate-comments
+## Gestion des commentaires
 
 Afin de modérer les commentaires lié à nos articles, nous allons mettre en place une page qui va lister les commentaires.
 Pour déterminer si un commentaire à déjà était modéré, il est nécéssaire de modifier nos données en base ainsi que le modèle des commentaires :
@@ -1857,6 +1881,7 @@ export interface Comment {
 
 ```
 
+### moderate-comments
 
 /modules/news/components/moderate-comments/moderate-comments.component.ts
 ```
