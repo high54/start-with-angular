@@ -2,6 +2,8 @@
 # Débuter avec Angular 7+ et structure évolutive
 Dans ce cours nous allons mettre en place notre environnement de travail ainsi qu'une structure d'application évolutive.
 
+Page du tutoriel :
+[GitHub](https://high54.github.io/start-with-angular/)
 
 - [Débuter avec Angular 7+ et structure évolutive](#d%C3%A9buter-avec-angular-7-et-structure-%C3%A9volutive)
   - [Mise en place de l'environnement](#mise-en-place-de-lenvironnement)
@@ -35,6 +37,7 @@ Dans ce cours nous allons mettre en place notre environnement de travail ainsi q
     - [article-form](#article-form)
   - [Gestion des commentaires](#gestion-des-commentaires)
     - [moderate-comments](#moderate-comments)
+  - [Authentification](#authentification)
 
 
 
@@ -2010,6 +2013,20 @@ Nous avons simplement modifié la méthode ```getCommentsByArticle(articleId: nu
 
 Ainsi, les commentaires que ne sont pas validé, ne sont pas affiché sur la page d'un article.
 
+
+
+
+Nous avons donc la possibilité d'ajouter/modifier ou supprimer des articles, ainsi que modérer les commentaires.
+
+La page d'administration est donc terminée pour le moment.
+
+
+Seulement voila, actuellement les auteurs sont spécifié directement dans le code. De plus n'importe qui peut accèder à la page d'administration du module.
+
+Il est donc temps de mettre en place l'authentification ainsi que les guars.
+
+
+## Authentification
 
 
 
