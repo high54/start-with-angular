@@ -1503,6 +1503,8 @@ Mais également la possibilité d'ajouter des commentaires à une news via un fo
 
 Cette administration va nous permettre d'ajouter, afficher, modifier ou supprimer un article (un CRUD).
 
+![diagramme](https://github.com/high54/start-with-angular/blob/master/docs/page-news-admin.png?raw=true)
+
 Le point d'entrée de l'administration sera situé dans le dossier pages/news-admin. Cette page est préfixée par "news" pour bien différencié des autres pages d'administration que l'application pourrait contenir.
 
 - modules
