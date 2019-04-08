@@ -19,9 +19,9 @@
       }
     },
     {
-      "title": "3éme article",
-      "description": "Description du 3éme article",
-      "content": "Contenu du 3éme article",
+      "title": "titre 1",
+      "description": "description",
+      "content": "contenu",
       "author": {
         "fullName": "Author N"
       },

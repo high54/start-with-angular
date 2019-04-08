@@ -1,7 +1,20 @@
 # Débuter avec Angular 7+ et structure évolutive
 Dans ce cours nous allons mettre en place notre environnement de travail ainsi qu'une structure d'application évolutive.
 
-## Mise en de l'environnement
+# Table of Contents
+1. [Mise en place de l'environnement](#Mise_en_place_de_lenvironnement_10)
+    1. [IDE](#IDE_18)
+    2. [Extensions](#Extensions_22)
+    3. [Installer l’environnement](#Installer_lenvironnement_47)
+    4. [Json Server](#JSONSERVER_91)
+2. [Module évolutif](#Module_volutif_125)
+    1. [News module](#News_module_167)
+
+
+
+
+
+## Mise en place de l'environnement
 
 ### IDE
 Je vous conseille fortement l'utilisation de Visual Studio Code pour suivre le cours :
@@ -76,6 +89,40 @@ Pour permettre la maintenabilité, ainsi que pour faciliter l'expansion de l'app
 Pour mettre en place une architecture évolutive, nous allons créer un dossier nommé "modules" à l'intérieur du dossier "app".
 Dans le dossier modules, nous allons développer ou simplement déposer les fonctionnalités de notre application.
 
+### JSON-SERVER
+
+Afin de simuler la présence d'une API, je vous conseille l'utilisation de json-server :
+
+```
+npm i -g json-server
+```
+
+À la racine de votre projet il vous faut créer un fichier db.json avec les informations suivante :
+
+```
+{
+    "articles": [],
+    "comments":[]
+}
+```
+
+Une fois l'installation de json-server et la création du fichier terminé, vous pouvez démarrer le serveur avec la commande suivante :
+
+```
+json-server --watch db.json
+```
+
+Le serveur va démarrer et s'ouvrir au port 3000 : "localhost:3000", nos articles seront disponible à l'URL suivante :
+```
+http://localhost:3000/articles
+```
+Et les commentaires :
+```
+http://localhost:3000/comments
+```
+
+Nous allons pouvoir effectuer toutes les requêtes GET, POST, PUT, DELETE que nous souhaitons et les données seront persistantes.
+
 ## Module évolutif
 
 Un module évolutif est un composant complexe, que l'on peut presque identifier comme une application à part entière.
@@ -118,7 +165,7 @@ Chaque dossier est composé de sous dossier correspondant à une fonctionnalité
 
 
 
-## News module
+### News module
 
 Nous allons débuter avec le module des news.
 Pour commencer nous allons avoir besoin de quelques pages :
@@ -168,41 +215,6 @@ Le module disposera de deux services :
 __Article.service__ va nous permettre d'effectuer une requête pour récupérer la liste des articles ainsi qu'une requête pour récupérer un article par son ID.
 
 __Comment.service__ va quant à lui récupérer les commentaires via l'ID d'un article. Nous pourrions inclure les commentaires avec l'article, mais par soucis de performance, et en cas d'indisponibilité du service, il est préférable de séparer les commentaires d'un article.
-
-
-## JSON-SERVER
-
-Afin de simuler la présence d'une API, je vous conseille l'utilisation de json-server :
-
-```
-npm i -g json-server
-```
-
-À la racine de votre projet il vous faut créer un fichier db.json avec les informations suivante :
-
-```
-{
-    "articles": [],
-    "comments":[]
-}
-```
-
-Une fois l'installation de json-server et la création du fichier terminé, vous pouvez démarrer le serveur avec la commande suivante :
-
-```
-json-server --watch db.json
-```
-
-Le serveur va démarrer et s'ouvrir au port 3000 : "localhost:3000", nos articles seront disponible à l'URL suivante :
-```
-http://localhost:3000/articles
-```
-Et les commentaires :
-```
-http://localhost:3000/comments
-```
-
-Nous allons pouvoir effectuer toutes les requêtes GET, POST, PUT, DELETE que nous souhaitons et les données seront persistantes.
 
 
 ## Affichage des news
@@ -336,7 +348,7 @@ export class ArticleService {
             .pipe(catchError((error: any) => throwError(JSON.stringify(error))));
     }
     /**
-     * Récupère tous les articles
+     * Récupére tous les articles
      */
     getArticles(): Observable<Article[]> {
         return this.http
@@ -1464,13 +1476,13 @@ Nous allons utiliser un router-outlet auxiliaire afin de ne jamais avoir besoin 
 
 ```
 
-### Gestion des articles
+## Gestion des articles
 
 Dans un premier temps nous allons mettre en place un composant pour afficher dans un tableau les articles et ainsi avoir une vue d'ensemble. Il nous sera possible d'accéder au formulaire d'ajout ou d'édition ainsi que de supprimer un article via des boutons.
-
+### manage-articles component
 /modules/news/components/manage-articles/manage-articles.component.ts
 ```
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Rxjs
@@ -1484,12 +1496,14 @@ import { Article } from '../../models/article.interface';
     selector: 'news-manage-article',
     styleUrls: ['manage-article.component.scss'],
     templateUrl: 'manage-article.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsManageArticlesComponent implements OnInit {
     articles$: Observable<Article[]>;
     constructor(
         private articleService: ArticleService,
-        private router: Router
+        private router: Router,
+        private cdr: ChangeDetectorRef
     ) { }
     /**
      * Fait référence à la méthode qui utilise ArticleService
@@ -1517,7 +1531,7 @@ export class NewsManageArticlesComponent implements OnInit {
      * Utilise le service ArticleService pour effectuer une requête HTTP à l'API
      * @param article Article object
      */
-    removeArticle(article: Article) {
+    removeArticle(article: Article): void {
         const remove = window.confirm(`Êtes-vous sur de vouloir supprimer l'article ?`);
         if (remove) {
             this.articleService.removeArticle(article).toPromise().then((removeArticleResponse) => {
@@ -1532,9 +1546,11 @@ export class NewsManageArticlesComponent implements OnInit {
      */
     private fetchData(): void {
         this.articles$ = this.articleService.getArticles();
+        this.cdr.detectChanges();
     }
 
 }
+
 
 ```
 
@@ -1553,6 +1569,7 @@ Ainsi l'utilisateur ne quitte jamais la page d'administration pour effectuer tou
 Nous pourrions effectuer un traitement sur la liste des articles déjà présent pour retirer l'article supprimer, mais nous travaillons à flux tendu en asynchrone avec les données.
 
 ```private fetchData(): void``` C'est ici que nous utilisons ArticleService pour récupérer la liste de nos articles.
+Etant donné que nous avons définit ```changeDetection``` à ```onPush``` il est important d'indiquer à Angular d'effectuer une détection des changements lorsque nous mettons à jours les données. C'est via la méthode ```detectChanges()``` de ```ChangeDetectoRef``` que nous effectiuons la mise à jour du composant.
 
 
 /modules/news/components/manage-articles/manage-articles.component.html

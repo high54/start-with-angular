@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Rxjs
@@ -12,12 +12,14 @@ import { Article } from '../../models/article.interface';
     selector: 'news-manage-article',
     styleUrls: ['manage-article.component.scss'],
     templateUrl: 'manage-article.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsManageArticlesComponent implements OnInit {
     articles$: Observable<Article[]>;
     constructor(
         private articleService: ArticleService,
-        private router: Router
+        private router: Router,
+        private cdr: ChangeDetectorRef
     ) { }
     /**
      * Fait référence à la méthode qui utilise ArticleService
@@ -56,10 +58,11 @@ export class NewsManageArticlesComponent implements OnInit {
         }
     }
     /**
-     * Utilise ArticleService pour récupérer les articles
+     * Utilise ArticleService pour récupérer la liste des articles puis met à jour l'affichage
      */
     private fetchData(): void {
         this.articles$ = this.articleService.getArticles();
+        this.cdr.detectChanges();
     }
 
 }

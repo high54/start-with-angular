@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 // Rxjs
@@ -11,6 +11,7 @@ import { Article } from '../../models/article.interface';
     selector: 'news-article-form',
     styleUrls: ['article-form.component.scss'],
     templateUrl: 'article-form.component.html',
+    changeDetection:ChangeDetectionStrategy.OnPush
 })
 export class NewsArticleFormComponent implements OnInit, OnDestroy {
     articleForm = this.fb.group({
