@@ -251,6 +251,8 @@ Nous allons nous concentrer sur le point d'entrée de notre module, à savoir la
 
 Ne pas confondre le module news et la pages news !
 
+[diagramme]: https://github.com/high54/start-with-angular/tree/master/docs/page-news.png "Diagramme page news"
+
 Récap de l'architecture :
 
 - db.json
@@ -938,17 +940,20 @@ Enfin pour terminer avec les composants, nous pouvons ajouter article-comments :
 
 /modules/news/components/article-comments/article-comments.components.ts
 ```
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Comment } from '../../models/comment.interface';
 
 @Component({
     selector: 'news-article-comments',
     styleUrls: ['article-comments.component.scss'],
     templateUrl: 'article-comments.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsArticleCommentsComponent {
     @Input() comment: Comment;
     constructor() { }
 }
+
 
 ```
 article-comments prends en entré un commentaire : ```@Input() comment: Comment``` afin d'afficher les informations dans le template :
@@ -2023,7 +2028,7 @@ La page d'administration est donc terminée pour le moment.
 
 Seulement voila, actuellement les auteurs sont spécifié directement dans le code. De plus n'importe qui peut accèder à la page d'administration du module.
 
-Il est donc temps de mettre en place l'authentification ainsi que les guars.
+Il est donc temps de mettre en place l'authentification ainsi que les guards.
 
 
 ## Authentification
