@@ -21,7 +21,7 @@
     {
       "title": "titre 1",
       "description": "description",
-      "content": "contenu",
+      "content": "contenu1",
       "author": {
         "fullName": "Author N"
       },
@@ -54,7 +54,7 @@
       },
       "content": "Contenu du commentaire 3",
       "articleId": 1,
-      "isModerate": false
+      "isModerate": true
     },
     {
       "id": 4,
@@ -63,7 +63,7 @@
       },
       "content": "Contenu du commentaire 4",
       "articleId": 2,
-      "isModerate": false
+      "isModerate": true
     }
   ]
 }

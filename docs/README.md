@@ -1972,10 +1972,12 @@ Maintenant que nous avons mis en place la modération des commentaires, nous pou
 /modules/news/services/comment.service.ts
 ```
 import { Injectable } from '@angular/core';
-import { Comment } from '../../models/comment.interface';
-import { Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+//Rxjs
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+// Models
+import { Comment } from '../../models/comment.interface';
 
 @Injectable()
 export class CommentService {
@@ -2038,7 +2040,18 @@ Il est donc temps de mettre en place l'authentification ainsi que les guards.
 ## Authentification
 
 
+Pour mettre en place un système d'authentification efficace, nous allons avoir besoin de plusieurs éléments :
 
+1. Interceptors
+2. Guards
+3. Pages
+4. Components
+5. Models
+6. Services
+
+
+Pour résumer, l'utilisateur effectuera une inscription ou une connexion via une page qui pourra afficher les différents composants.
+Un service sera mis en place pour traiter les demandes avec l'API. Les données émissent et récupérée devront correspondre à des modèles de données. Un ou plusieurs interceptors seront mis en place afin d'intercepter les requêtes pour y ajouter des paramètres. Puis nous verrouillerons notre page d’administration (celle du module News).
 
 
 

@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 // Rxjs
-import { Observable, Subscriber, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 // Services
 import { ArticleService } from '../../services';
 // Models
@@ -68,7 +68,7 @@ export class NewsArticleFormComponent implements OnInit, OnDestroy {
      * 
      * @param form Données du formulaire présent dans le template
      */
-    addOrEditArticle(form: FormControl): void {
+    addOrEditArticle(form: FormGroup): void {
         const { valid, value } = form;
         if (valid) {
             if (this.isEdit) {

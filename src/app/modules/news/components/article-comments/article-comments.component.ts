@@ -1,4 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Comment } from '../../models/comment.interface';
 
 @Component({
     selector: 'news-article-comments',
