@@ -1,3 +1,10 @@
 <div class="moderate-comments">
-    
+    <div class="comment-card" *ngFor="let comment of (comments$ | async)">
+        <div class="actions">
+            <button type="button" (click)="moderateComment(comment, true)">Valider</button>
+            <button type="button" (click)="moderateComment(comment, false)">Refuser</button>
+            <p>{{ comment.content }}</p>
+            <span>{{ comment.author.fullName }}</span>
+        </div>
+    </div>
 </div>

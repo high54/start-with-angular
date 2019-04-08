@@ -35,7 +35,8 @@
         "fullName": "Author 3"
       },
       "content": "Contenu du commentaire 1, Andouille !",
-      "articleId": 1
+      "articleId": 1,
+      "isModerate": true
     },
     {
       "id": 2,
@@ -43,7 +44,8 @@
         "fullName": "Author 3"
       },
       "content": "Contenu du commentaire 2",
-      "articleId": 2
+      "articleId": 2,
+      "isModerate": true
     },
     {
       "id": 3,
@@ -51,7 +53,8 @@
         "fullName": "Author 4"
       },
       "content": "Contenu du commentaire 3",
-      "articleId": 1
+      "articleId": 1,
+      "isModerate": false
     },
     {
       "id": 4,
@@ -59,7 +62,8 @@
         "fullName": "Author 4"
       },
       "content": "Contenu du commentaire 4",
-      "articleId": 2
+      "articleId": 2,
+      "isModerate": false
     }
   ]
 }

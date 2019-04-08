@@ -26,7 +26,7 @@ export class NewsItemComponent implements OnInit {
     ngOnInit(): void {
         if (this.route.snapshot.params.articleId) {
             this.article$ = this.articleService.getArticle(this.route.snapshot.params.articleId);
-            this.comments$ = this.commentService.getComments(this.route.snapshot.params.articleId);
+            this.comments$ = this.commentService.getCommentsByArticle(this.route.snapshot.params.articleId);
         } else {
             this.router.navigate(['../']);
         }

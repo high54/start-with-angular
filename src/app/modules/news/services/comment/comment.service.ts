@@ -17,11 +17,18 @@ export class CommentService {
             .pipe(catchError((error: any) => throwError(JSON.stringify(error))));
     }
 
-    getComments(articleId: number): Observable<Comment[]> {
+    getCommentsByArticle(articleId: number): Observable<Comment[]> {
         return this.http
-            .get<Comment[]>(`${this.api}/comments?articleId=${articleId}`)
+            .get<Comment[]>(`${this.api}/comments?articleId=${articleId}&isModerate=true`)
             .pipe(catchError((error: any) => throwError(JSON.stringify(error))));
     }
+
+    getComments(): Observable<Comment[]> {
+        return this.http
+            .get<Comment[]>(`${this.api}/comments?isModerate=false`)
+            .pipe(catchError((error: any) => throwError(JSON.stringify(error))));
+    }
+
 
     updateComment(payload: Comment): Observable<Comment> {
         return this.http

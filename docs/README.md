@@ -1,3 +1,4 @@
+
 # Débuter avec Angular 7+ et structure évolutive
 Dans ce cours nous allons mettre en place notre environnement de travail ainsi qu'une structure d'application évolutive.
 
@@ -254,12 +255,13 @@ Voici le code TypeScript du composant article-short-display :
 
 /modules/news/components/article-short-display/article-short-display.component.ts
 ```
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
     selector: 'news-article-short-dsiplay',
     styleUrls: ['article-short-display.component.scss'],
     templateUrl: 'article-short-display.component.html',
+    changeDetection:  ChangeDetectionStrategy.OnPush
 })
 export class NewsArticleShortDisplayComponent {
     constructor() {}
@@ -289,7 +291,17 @@ export * from './article-short-display/article-short-display.component';
 
 Ainsi nous avons à notre dispositions une constante nommée "components" qui est un tableau avec tous les composants.
 
+### changeDetection:  OnPush
+De base Angular met en place une détection des changements qui s'exécute après chaque action utilisateur (par exemple, cliquer sur un bouton). Cela peut vite devenir assez gourmand en ressource sur une grosse application, car toutes l'application est scannée afin d'être mise à jour.
 
+Via ```OnPush``` nous indiquons qu'il n'est pas utile d'effectuer une détection des changements après chaque action. Cela indique également que le composant dépend uniquement des données en entrée, et ne doit être vérifié que dans les cas suivants :
+
+1. La référence d'entrée change
+	Nous sommes obligé de travailler avec des objets immuables (ou des observables).
+
+2. Un événement provient du composant ou de l'un de ses enfants
+	Un composant peut avoir un état interne qui est mis à jour lorsqu'un événement est déclenché par le composant ou l'un de ses enfants.
+	
 Voyons maintenant la page news :
 /modules/news/pages/news/news.component.ts
 ```
@@ -966,11 +978,18 @@ export class CommentService {
             .pipe(catchError((error: any) => throwError(JSON.stringify(error))));
     }
 
-    getComments(articleId: number): Observable<Comment[]> {
+    getCommentsByArticle(articleId: number): Observable<Comment[]> {
         return this.http
-            .get<Comment[]>(`${this.api}/comments/${articleId}`)
+            .get<Comment[]>(`${this.api}/comments?articleId=${articleId}`)
             .pipe(catchError((error: any) => throwError(JSON.stringify(error))));
     }
+
+    getComments(): Observable<Comment[]> {
+        return this.http
+            .get<Comment[]>(`${this.api}/comments?isModerate=false`)
+            .pipe(catchError((error: any) => throwError(JSON.stringify(error))));
+    }
+
 
     updateComment(payload: Comment): Observable<Comment> {
         return this.http
@@ -984,7 +1003,6 @@ export class CommentService {
             .pipe(catchError((error: any) => throwError(JSON.stringify(error))));
     }
 }
-
 
 ```
 C'est un service assez standard, il permet d'effectuer un CRUD complet sur les commentaires via des requêtes HTTP.
@@ -1104,12 +1122,13 @@ export class NewsItemComponent implements OnInit {
     ngOnInit(): void {
         if (this.route.snapshot.params.articleId) {
             this.article$ = this.articleService.getArticle(this.route.snapshot.params.articleId);
-            this.comments$ = this.commentService.getComments(this.route.snapshot.params.articleId);
+            this.comments$ = this.commentService.getCommentsByArticle(this.route.snapshot.params.articleId);
         } else {
             this.router.navigate(['../']);
         }
     }
 }
+
 
 ```
 
@@ -1479,6 +1498,7 @@ Nous allons utiliser un router-outlet auxiliaire afin de ne jamais avoir besoin 
 ## Gestion des articles
 
 Dans un premier temps nous allons mettre en place un composant pour afficher dans un tableau les articles et ainsi avoir une vue d'ensemble. Il nous sera possible d'accéder au formulaire d'ajout ou d'édition ainsi que de supprimer un article via des boutons.
+
 ### manage-articles component
 /modules/news/components/manage-articles/manage-articles.component.ts
 ```
@@ -1569,7 +1589,7 @@ Ainsi l'utilisateur ne quitte jamais la page d'administration pour effectuer tou
 Nous pourrions effectuer un traitement sur la liste des articles déjà présent pour retirer l'article supprimer, mais nous travaillons à flux tendu en asynchrone avec les données.
 
 ```private fetchData(): void``` C'est ici que nous utilisons ArticleService pour récupérer la liste de nos articles.
-Etant donné que nous avons définit ```changeDetection``` à ```onPush``` il est important d'indiquer à Angular d'effectuer une détection des changements lorsque nous mettons à jours les données. C'est via la méthode ```detectChanges()``` de ```ChangeDetectoRef``` que nous effectiuons la mise à jour du composant.
+Etant donné que nous avons défini ```changeDetection``` à ```onPush``` il est important d'indiquer à Angular d'effectuer une détection des changements lorsque nous mettons à jours les données. C'est via la méthode ```detectChanges()``` de ```ChangeDetectoRef``` que nous effectuons la mise à jour du composant.
 
 
 /modules/news/components/manage-articles/manage-articles.component.html
@@ -1610,6 +1630,360 @@ Etant donné que nous avons définit ```changeDetection``` à ```onPush``` il es
 </div>
 ```
 
+### article-form
+
+Afin de gérer l'ajout et l'édition d'un article nous devons mettre en place un formulaire :
+
+/modules/news/components/article-form/article-form.component.ts
+```
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { FormBuilder, Validators, FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+// Rxjs
+import { Observable, Subscriber, Subscription } from 'rxjs';
+// Services
+import { ArticleService } from '../../services';
+// Models
+import { Article } from '../../models/article.interface';
+@Component({
+    selector: 'news-article-form',
+    styleUrls: ['article-form.component.scss'],
+    templateUrl: 'article-form.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class NewsArticleFormComponent implements OnInit, OnDestroy {
+    // Champs du formulaire disponible dans le template
+    articleForm = this.fb.group({
+        title: ['', Validators.required],
+        description: ['', Validators.required],
+        content: ['', Validators.required]
+    });
+    title = `Ajouter un article`;
+    article$: Subscription;
+
+    private isEdit = false;
+    private article: Article;
+
+    constructor(
+        private fb: FormBuilder,
+        private route: ActivatedRoute,
+        private router: Router,
+        private articleService: ArticleService
+    ) { }
+    
+    /**
+     * Si un ID est passé en paramètre, alors il s'agit de l'édition d'un article
+     * Dans ce cas, nous modifions le titre du composant et via le service des articles nous allons récupérer les données.
+     * Puis nous ajoutons les données de l'article au formulaire via patchValue.
+     */
+    ngOnInit(): void {
+        if (this.route.snapshot.params.articleId) {
+            this.isEdit = true;
+            this.title = `Modifier un article`;
+            this.article$ = this.articleService.getArticle(this.route.snapshot.params.articleId).subscribe(articleRes => {
+                this.article = articleRes;
+                this.articleForm.patchValue(articleRes);
+            });
+        }
+    }
+    /**
+     * Pour éviter les fuites de mémoires, s'il s'agit de l'édition d'un article
+     * nous effectuons une désinscription
+     */
+    ngOnDestroy(): void {
+        if (this.isEdit) {
+            this.article$.unsubscribe();
+        }
+    }
+
+    /**
+     * S'il s'agit de l'édition' d'un article, nous demandons au service de mettre à jour l'article.
+     * En cas de réussite, l'utilisateur est redirigé vers la liste des articles à l'accueil de l'administration des news
+     * 
+     * S'il s'agit de l'ajout d'un article, nous demandons au service de l'ajouter.
+     * En cas de réussite, l'utilisateur est également redirigé vers la liste des articles
+     * 
+     * En cas d'échec dans les deux cas, une fenêtre s'affiche pour indiquer l'erreur.
+     * 
+     * @param form Données du formulaire présent dans le template
+     */
+    addOrEditArticle(form: FormControl): void {
+        const { valid, value } = form;
+        if (valid) {
+            if (this.isEdit) {
+                this.articleService.updateArticle({ ...this.article, ...value }).toPromise().then((updateArticleRes) => {
+                    this.router.navigate(['/news/admin/', { outlets: { 'news-admin': ['manage-articles'] } }]);
+                }, (updateArticleRej) => {
+                    window.confirm(updateArticleRej);
+                });
+            } else {
+                value.author = {
+                    fullName: 'Author N'
+                };
+                this.articleService.createArticle(value).toPromise().then((createArticleRes) => {
+                    this.router.navigate(['/news/admin/', { outlets: { 'news-admin': ['manage-articles'] } }]);
+                }, (createArticleRej) => {
+                    window.confirm(createArticleRej);
+                });
+            }
+        } else {
+            window.confirm(`Veuillez compléter l'intégralité du formulaire.`);
+        }
+    }
+}
+```
+
+/modules/news/components/article-form/article-form.component.html
+```
+<div class="article-form">
+    <h3>{{title}}</h3>
+    <form [formGroup]="articleForm">
+        <label> Titre
+            <input type="text" formControlName="title">
+        </label>
+        <label>Description
+            <textarea formControlName="description"></textarea>
+        </label>
+        <label>Contenu
+            <textarea formControlName="content"></textarea>
+        </label>
+        <button type="button" (click)="addOrEditArticle(articleForm)">Enregistrer</button>
+    </form>
+</div>
+
+```
+
+
+Dans ce composant nous affichons un formulaire qui sera autocomplété en cas d'édition d'un article.
+Si le formulaire est valide, nous utilisons soit la méthode ```createArticle()``` en cas d'ajout ou soit ```updateArticle()``` en cas d'édition.
+
+Cette fois-ci nous mettons en place les cycles de vie ```OnInit``` et ```OnDestroy``` car en cas d'édition d'un article nous devons souscrire à notre service afin de remplir les champs du formulaire. Donc il est important de si désinscrire afin d'éviter toutes fuites de mémoires.
+
+
+
+
+### moderate-comments
+
+Afin de modérer les commentaires lié à nos articles, nous allons mettre en place une page qui va lister les commentaires.
+Pour déterminer si un commentaire à déjà était modéré, il est nécéssaire de modifier nos données en base ainsi que le modèle des commentaires :
+
+
+/modules/news/models/comment.interface.ts
+```
+import { Author } from './author.interface';
+
+export interface Comment {
+    id?: number;
+    author?: Author;
+    content?: string;
+    articleId?: number;
+    isModerate?: boolean;
+}
+
+```
+
+
+/db.json
+```
+{
+  "articles": [
+    {
+      "id": 1,
+      "title": "Première news",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+      "content": "Lorem ipsum dolor Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet consectetur adipiscing elit Lorem ipsum dolor sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Ut enim ad minim veniam",
+      "author": {
+        "fullName": "Author 1"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Seconde news",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+      "content": "Lorem ipsum dolor Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet consectetur adipiscing elit Lorem ipsum dolor sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Ut enim ad minim veniam",
+      "author": {
+        "fullName": "Author 2"
+      }
+    },
+    {
+      "title": "titre 1",
+      "description": "description",
+      "content": "contenu",
+      "author": {
+        "fullName": "Author N"
+      },
+      "id": 3
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "author": {
+        "fullName": "Author 3"
+      },
+      "content": "Contenu du commentaire 1, Andouille !",
+      "articleId": 1,
+      "isModerate":false
+    },
+    {
+      "id": 2,
+      "author": {
+        "fullName": "Author 3"
+      },
+      "content": "Contenu du commentaire 2",
+      "articleId": 2,
+      "isModerate":false
+    },
+    {
+      "id": 3,
+      "author": {
+        "fullName": "Author 4"
+      },
+      "content": "Contenu du commentaire 3",
+      "articleId": 1,
+      "isModerate":false
+    },
+    {
+      "id": 4,
+      "author": {
+        "fullName": "Author 4"
+      },
+      "content": "Contenu du commentaire 4",
+      "articleId": 2,
+      "isModerate":false
+    }
+  ]
+}
+
+```
+
+
+/modules/news/components/moderate-comments/moderate-comments.component.ts
+```
+import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommentService } from '../../services';
+import { Subscription, Observable } from 'rxjs';
+import { Comment } from '../../models/comment.interface';
+
+@Component({
+    selector: 'news-moderate-comments',
+    styleUrls: ['moderate-comments.component.scss'],
+    templateUrl: 'moderate-comments.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class NewsModerateCommentsComponent implements OnInit {
+    comments$: Observable<Comment[]>;
+    constructor(
+        private commentService: CommentService,
+        private cdr: ChangeDetectorRef
+    ) { }
+
+    ngOnInit(): void {
+        this.fetchData();
+    }
+    /**
+     * Valide ou supprime un commentaire
+     * @param comment Commentaire à valider ou supprimer
+     * @param isValid boolean, True si commentaire à valider, False si commentaire à supprimer
+     */
+    moderateComment(comment: Comment, isValid: boolean): void {
+        if (isValid) {
+            comment.isModerate = isValid;
+            this.commentService.updateComment(comment).toPromise().then((updateCommentResolve) => {
+                this.fetchData();
+            }, (updateCommentReject) => {
+                window.confirm(updateCommentReject);
+            });
+        } else {
+            this.commentService.removeComment(comment).toPromise().then((removeCommentResolve) => {
+                this.fetchData();
+            }, (removeCommentReject) => {
+                window.confirm(removeCommentReject);
+            });
+        }
+    }
+
+    /**
+     * Récupérer depuis le service des commentaires la liste des commentaires qui n'ont pas été modéré
+     * puis lance une détéction des changements sur le composant
+     */
+    private fetchData(): void {
+        this.comments$ = this.commentService.getComments();
+        this.cdr.detectChanges();
+    }
+}
+
+```
+
+/modules/news/components/moderate-comments/moderate-comments.component.html
+```
+<div class="moderate-comments">
+    <div class="comment-card" *ngFor="let comment of (comments$ | async)">
+        <div class="actions">
+            <button type="button" (click)="moderateComment(comment, true)">Valider</button>
+            <button type="button" (click)="moderateComment(comment, false)">Refuser</button>
+            <p>{{ comment.content }}</p>
+            <span>{{ comment.author.fullName }}</span>
+        </div>
+    </div>
+</div>
+
+```
+
+Maintenant que nous avons mis en place la modération des commentaires, nous pouvons l'utiliser dans le composant qui les affichent. Pour ce faire nous allons modifier le service des commentaires :
+
+/modules/news/services/comment.service.ts
+```
+import { Injectable } from '@angular/core';
+import { Comment } from '../../models/comment.interface';
+import { Observable, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+
+@Injectable()
+export class CommentService {
+    private api = 'http://localhost:3000';
+    constructor(
+        private http: HttpClient
+    ) { }
+
+    createComment(payload: Comment): Observable<Comment> {
+        return this.http
+            .post<Comment>(`${this.api}/comments`, payload)
+            .pipe(catchError((error: any) => throwError(JSON.stringify(error))));
+    }
+
+    getCommentsByArticle(articleId: number): Observable<Comment[]> {
+        return this.http
+            .get<Comment[]>(`${this.api}/comments?articleId=${articleId}&isModerate=true`)
+            .pipe(catchError((error: any) => throwError(JSON.stringify(error))));
+    }
+
+    getComments(): Observable<Comment[]> {
+        return this.http
+            .get<Comment[]>(`${this.api}/comments?isModerate=false`)
+            .pipe(catchError((error: any) => throwError(JSON.stringify(error))));
+    }
+
+
+    updateComment(payload: Comment): Observable<Comment> {
+        return this.http
+            .put<Comment>(`${this.api}/comments/${payload.id}`, payload)
+            .pipe(catchError((error: any) => throwError(JSON.stringify(error))));
+    }
+
+    removeComment(payload: Comment): Observable<Comment> {
+        return this.http
+            .delete<any>(`${this.api}/comments/${payload.id}`)
+            .pipe(catchError((error: any) => throwError(JSON.stringify(error))));
+    }
+}
+
+```
+
+Nous avons simplement modifié la méthode ```getCommentsByArticle(articleId: number)``` pour ajouter à l'URL de la requête ```isModerate=true```.
+
+Ainsi, les commentaires que ne sont pas validé, ne sont pas affiché sur la page d'un article.
 
 
 

@@ -5,4 +5,5 @@ export interface Comment {
     author?: Author;
     content?: string;
     articleId?: number;
+    isModerate?: boolean;
 }
