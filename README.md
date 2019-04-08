@@ -18,7 +18,7 @@ Page du tutoriel :
     - [changeDetection: OnPush](#changedetection-onpush)
     - [Routes](#routes)
   - [news module](#news-module)
-  - [news-item](#news-item)
+  - [News-item](#news-item)
     - [article-display composant](#article-display-composant)
     - [article-author composant](#article-author-composant)
     - [author interface](#author-interface)
@@ -251,7 +251,7 @@ Nous allons nous concentrer sur le point d'entrée de notre module, à savoir la
 
 Ne pas confondre le module news et la pages news !
 
-[diagramme]: https://github.com/high54/start-with-angular/tree/master/docs/page-news.png "Diagramme page news"
+![diagramme](https://github.com/high54/start-with-angular/blob/master/docs/page-news.png?raw=true)
 
 Récap de l'architecture :
 
@@ -719,9 +719,11 @@ Le plus dur jusqu'à présent a été de mettre en place une structure facilemen
 
 L'étape suivante consiste à afficher un article complet dans une autre page, avec l'auteur et les commentaires associé.
 
-## news-item
+## News-item
 
 Dans notre dossier pages, nous allons ajouter un composant news-item :
+
+![diagramme](https://github.com/high54/start-with-angular/blob/master/docs/page%20news-item.png?raw=true)
 
 /modules/news/pages/news-item/news-item.component.ts
 ```
