@@ -26,6 +26,15 @@
         "fullName": "Author N"
       },
       "id": 3
+    },
+    {
+      "title": "Article du siècle",
+      "description": "Description",
+      "content": "Contennu",
+      "author": {
+        "fullName": "Author N"
+      },
+      "id": 4
     }
   ],
   "comments": [

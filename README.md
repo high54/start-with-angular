@@ -2055,6 +2055,12 @@ Un service sera mis en place pour traiter les demandes avec l'API. Les données 
 
 
 
+### Interceptor
+
+Un "interceptor" permet comme son nom l'indique d'intercepter, en l'occurrence des requêtes HTTP(s).
+Cela permet donc d'intercepter des requêtes HTTP(s) entrante ou sortante. De ce fait il est possible d'ajouter des paramètres aux requêtes sortantes ou de traiter les requêtes entrantes. Dans notre cas nous intercepterons les requêtes entrantes générant des erreurs afin de les traiter, et concernant les requêtes sortantes, nous passerons le JWT (Json Web Token) si l'utilisateur en possède un.
+
+Une chose très importante avec les interceptors, c'est d'éviter de déclarer plusieurs HttpClientModule. De préférence on déclare un HttpClientModule dans le fichier app.module.ts. 
 
 
 
