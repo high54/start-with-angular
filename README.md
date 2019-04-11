@@ -38,6 +38,7 @@ Page du tutoriel :
   - [Gestion des commentaires](#gestion-des-commentaires)
     - [moderate-comments](#moderate-comments)
   - [Authentification](#authentification)
+    - [Interceptor](#interceptor)
 
 
 
@@ -95,7 +96,7 @@ SHIFT + CLIC DROIT dans la fenêtre puis : Ouvrir la fenêtre PowerShell ici.
 Ou
 Taper "cmd" dans la barre d'adresse du dossier.
 
-Ces deux actions vont avoir pour effet d'ouvrir une invte de commande dans le répertoire courant.
+Ces deux actions vont avoir pour effet d'ouvrir une invite de commande dans le répertoire courant.
 
 Dans la fenêtre de commandes :
 ```
@@ -321,7 +322,7 @@ export * from './article-short-display/article-short-display.component';
 Ainsi nous avons à notre dispositions une constante nommée "components" qui est un tableau avec tous les composants.
 
 ### changeDetection:  OnPush
-De base Angular met en place une détection des changements qui s'exécute après chaque action utilisateur (par exemple, cliquer sur un bouton). Cela peut vite devenir assez gourmand en ressource sur une grosse application, car toutes l'application est scannée afin d'être mise à jour.
+De base Angular met en place une détection des changements qui s'exécute après chaque action utilisateur (par exemple, cliquer sur un bouton). Cela peut vite devenir assez gourmand en ressource sur une grosse application, car toute l'application est scannée afin d'être mise à jour.
 
 Via ```OnPush``` nous indiquons qu'il n'est pas utile d'effectuer une détection des changements après chaque action. Cela indique également que le composant dépend uniquement des données en entrée, et ne doit être vérifié que dans les cas suivants :
 
