@@ -6,6 +6,10 @@ const routes: Routes = [
   {
     path: 'news',
     loadChildren: './modules/news/news.module#NewsModule',
+  },
+  {
+    path: 'authentication',
+    loadChildren: './modules/core/auth/auth.module#AuthModule'
   }
 ];
 

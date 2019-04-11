@@ -1,0 +1,9 @@
+<div class="login">
+    <form [formGroup]="formLogin">
+        <label for="usernameId">Username</label>
+        <input type="texte" id="usernameId" formControlName="username">
+        <label for="passwordId">Password</label>
+        <input type="password" id="passwordId" formControlName="password">
+        <button type="button" (click)="connexion(formLogin)">Connexion</button>
+    </form>
+</div>
