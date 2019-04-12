@@ -1,8 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
+// Pages
 import * as fromPages from './pages';
+// Components
 import * as fromComponents from './components';
+
+// Guard from Auth
+import { AuthGuard } from 'src/app/core/auth/guards';
 
 
 // routes
@@ -14,6 +18,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: fromPages.NewsAdminComponent,
+    canActivate: [AuthGuard],
     children: [
       {
         path: '',

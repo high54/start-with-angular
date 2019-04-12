@@ -35,7 +35,8 @@ export class AppLoginComponent implements OnInit {
         if (valid) {
             this.authService.login(value.username, value.password).pipe(first())
                 .subscribe(data => {
-                    this.router.navigate([this.returnUrl]);
+                    console.log(this.returnUrl.replace('%28', '(').replace('%29', ')'));
+                    this.router.navigate([this.returnUrl.replace('%28', '(').replace('%29', ')')]);
                 }, error => {
                     console.log(error);
                 });

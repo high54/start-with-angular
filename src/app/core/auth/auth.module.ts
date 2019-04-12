@@ -11,6 +11,7 @@ import { AuthRoutingModule } from './auth-routing.module';
 import * as fromServices from './services';
 // Interceptors
 import * as fromInterceptors from './interceptors';
+import { fakeBackendProvider } from './interceptors/fakeBackend.interceptor';
 @NgModule({
     imports: [
         CommonModule,
@@ -23,7 +24,8 @@ import * as fromInterceptors from './interceptors';
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: fromInterceptors.HttpTokenInterceptor, multi: true },
-        ...fromServices.services
+        ...fromServices.services,
+        fakeBackendProvider
     ]
 })
 export class AuthModule { }

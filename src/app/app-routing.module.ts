@@ -9,7 +9,11 @@ const routes: Routes = [
   },
   {
     path: 'authentication',
-    loadChildren: './modules/core/auth/auth.module#AuthModule'
+    loadChildren: './core/auth/auth.module#AuthModule'
+  },
+  {
+    path: '**',
+    loadChildren: './core/not-found/not-found.module#NotFoundModule'
   }
 ];
 
