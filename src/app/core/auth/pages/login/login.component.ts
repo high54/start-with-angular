@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AuthService } from '../../services';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { first } from 'rxjs/operators';
 
 @Component({
@@ -29,14 +29,13 @@ export class AppLoginComponent implements OnInit {
         this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
     }
 
-    connexion(form: FormGroup) {
+    connexion(form: FormGroup): void {
         const { value, valid } = form;
 
         if (valid) {
             this.authService.login(value.username, value.password).pipe(first())
                 .subscribe(data => {
-                    console.log(this.returnUrl.replace('%28', '(').replace('%29', ')'));
-                    this.router.navigate([this.returnUrl.replace('%28', '(').replace('%29', ')')]);
+                    this.router.navigate(['']);
                 }, error => {
                     console.log(error);
                 });

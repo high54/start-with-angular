@@ -2037,8 +2037,28 @@ Seulement voila, actuellement les auteurs sont spécifié directement dans le co
 
 Il est donc temps de mettre en place l'authentification ainsi que les guards.
 
+## Core
 
-## Authentification
+Afin de connecter nos différents modules entre eux, nous allons mettre en place le coeur de l'application.
+Le core va servire de liant entre nos modules, mais va également servir à mettre en place la navigation et le header qui seront commun. Dans un sens, ces bloques (navigation, authentification, header, etc..) sont globalement basique à quelques exception prés. De plus nous les retrouvons dans chaque application.
+
+
+
+### 404 Not Found
+
+La page 404 est un élément important pour ne pas frustrer l'utilisateur lors de sa navigation.
+
+
+### Header
+
+Le composant header, va nous permettre d'afficher le logo de l'application ainsi que l'option de connexion / Deconnexion et affichage du pseudo de l'utilisateur.
+
+### Navigation
+
+
+
+
+### Authentification
 
 
 Pour mettre en place un système d'authentification efficace, nous allons avoir besoin de plusieurs éléments :
@@ -2056,10 +2076,10 @@ Un service sera mis en place pour traiter les demandes avec l'API. Les données 
 
 
 
-### Interceptor
+#### Interceptor
 
-Un "interceptor" permet comme son nom l'indique d'intercepter, en l'occurrence des requêtes HTTP(s).
-Cela permet donc d'intercepter des requêtes HTTP(s) entrante ou sortante. De ce fait il est possible d'ajouter des paramètres aux requêtes sortantes ou de traiter les requêtes entrantes. Dans notre cas nous intercepterons les requêtes entrantes générant des erreurs afin de les traiter, et concernant les requêtes sortantes, nous passerons le JWT (Json Web Token) si l'utilisateur en possède un.
+Un "interceptor" permet comme son nom l'indique d'intercepter, en l'occurrence des requêtes HTTP(S)entrante ou sortante.
+De ce fait il est possible d'ajouter des paramètres aux requêtes sortantes ou de traiter les requêtes entrantes. Dans notre cas nous intercepterons les requêtes entrantes générant des erreurs afin de les traiter, et concernant les requêtes sortantes, nous passerons le JWT (Json Web Token) si l'utilisateur en possède un.
 
 Une chose très importante avec les interceptors, c'est d'éviter de déclarer plusieurs HttpClientModule. De préférence on déclare un HttpClientModule dans le fichier app.module.ts. 
 
