@@ -1,5 +1,5 @@
 <div class="moderate-comments">
-    <h2>Modération des commentaires</h2>
+    <h3>Modération des commentaires</h3>
     <div class="comment-card" *ngFor="let comment of (comments$ | async)">
         <div class="actions">
             <button type="button" (click)="moderateComment(comment, true)">Valider</button>

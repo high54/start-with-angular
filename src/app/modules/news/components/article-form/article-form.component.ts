@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, FormControl, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 // Rxjs
 import { Subscription } from 'rxjs';
@@ -20,7 +20,7 @@ export class NewsArticleFormComponent implements OnInit, OnDestroy {
         description: ['', Validators.required],
         content: ['', Validators.required]
     });
-    title = `Ajouter un article`;
+    pageTitle = `Ajouter un article`;
     article$: Subscription;
 
     private isEdit = false;
@@ -40,7 +40,7 @@ export class NewsArticleFormComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         if (this.route.snapshot.params.articleId) {
             this.isEdit = true;
-            this.title = `Modifier un article`;
+            this.pageTitle = `Modifier un article`;
             this.article$ = this.articleService.getArticle(this.route.snapshot.params.articleId).subscribe(articleRes => {
                 this.article = articleRes;
                 this.articleForm.patchValue(articleRes);
@@ -70,7 +70,9 @@ export class NewsArticleFormComponent implements OnInit, OnDestroy {
      */
     addOrEditArticle(form: FormGroup): void {
         const { valid, value } = form;
+        // Si les champs du formulaire sont valide alors...
         if (valid) {
+            // S'il s'agit d'une modification d'artile
             if (this.isEdit) {
                 this.articleService.updateArticle({ ...this.article, ...value }).toPromise().then((updateArticleRes) => {
                     this.router.navigate(['/news/admin/', { outlets: { 'news-admin': ['manage-articles'] } }]);
@@ -78,9 +80,11 @@ export class NewsArticleFormComponent implements OnInit, OnDestroy {
                     window.confirm(updateArticleRej);
                 });
             } else {
+                // Sinon, il s'agit de l'ajout d'un article
                 value.author = {
                     fullName: 'Author N'
                 };
+                // Demande au service d'ajouter l'article et redirige l'utilisateur vers la liste de l'admin
                 this.articleService.createArticle(value).toPromise().then((createArticleRes) => {
                     this.router.navigate(['/news/admin/', { outlets: { 'news-admin': ['manage-articles'] } }]);
                 }, (createArticleRej) => {
@@ -88,7 +92,33 @@ export class NewsArticleFormComponent implements OnInit, OnDestroy {
                 });
             }
         } else {
+            // Sinon, on affiche une alerte dans le navigateur.
             window.confirm(`Veuillez compléter l'intégralité du formulaire.`);
         }
+    }
+
+    /**
+     * Redirige l'utilisateur à la liste des articles
+     */
+    cancel(): void {
+        this.router.navigate(['/news/admin/']);
+    }
+
+    /**
+     *  Getter pour lever les erreurs sur le formulaire et les afficher à l'utilisateur.
+     *  Retourne un champ du formulaire sous forme d'AbstractControl
+     *  permettant ainsi d'accéder aux propriétés (isValid, touched, required, etc...).
+     */
+
+    get title(): AbstractControl {
+        return this.articleForm.get('title');
+    }
+
+    get description(): AbstractControl {
+        return this.articleForm.get('description');
+    }
+
+    get content(): AbstractControl {
+        return this.articleForm.get('content');
     }
 }

@@ -1,8 +1,5 @@
 .article-form{
-    label{
-        display: block;
-    }
-    input, textarea {
-        display: block;
+    .has-errors{
+        color: coral;
     }
 }

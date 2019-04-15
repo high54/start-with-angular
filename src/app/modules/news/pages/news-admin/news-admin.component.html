@@ -1,8 +1,21 @@
 <div class="news-admin">
-    <h2>Administration des news</h2>
+    <h2>Administration du module news</h2>
     <div class="nav">
-        <a [routerLink]="[{ outlets: { 'news-admin': ['moderate-comments'] } }]">Modérer les commentaires</a> -
-        <a [routerLink]="[{ outlets: { 'news-admin': ['manage-articles'] } }]">Gérer les articles</a>
+
+
     </div>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active"
+                [routerLink]="[{ outlets: { 'news-admin': ['moderate-comments'] } }]">Modérer les
+                commentaires</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active"
+                [routerLink]="[{ outlets: { 'news-admin': ['manage-articles'] } }]">Gérer les
+                articles</a>
+        </li>
+    </ul>
     <router-outlet name="news-admin"></router-outlet>
 </div>

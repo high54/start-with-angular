@@ -1,8 +1,8 @@
 <div class="manage-article">
-    <h2>Gestion des articles</h2>
-    <button type="button" (click)="addArticle()">Ajouter un article</button>
-    <table>
-        <thead>
+    <h3>Gestion des articles</h3>
+    <button type="button" class="btn btn-primary" (click)="addArticle()">Ajouter un article</button>
+    <table class="table">
+        <thead class="thead-dark">
             <tr>
                 <th>Titre</th>
                 <th>Auteur</th>
@@ -19,12 +19,12 @@
                     {{article.author.fullName}}
                 </td>
                 <td>
-                    <button type="button" (click)="editArticle(article)">
+                    <button type="button" class="btn btn-primary" (click)="editArticle(article)">
                         Editer
                     </button>
                 </td>
                 <td>
-                    <button type="button" (click)="removeArticle(article)">
+                    <button type="button" class="btn btn-danger" (click)="removeArticle(article)">
                         Supprimer
                     </button>
                 </td>

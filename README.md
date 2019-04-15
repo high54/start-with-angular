@@ -37,8 +37,12 @@ Page du tutoriel :
     - [article-form](#article-form)
   - [Gestion des commentaires](#gestion-des-commentaires)
     - [moderate-comments](#moderate-comments)
-  - [Authentification](#authentification)
-    - [Interceptor](#interceptor)
+  - [Core](#core)
+    - [404 Not Found](#404-not-found)
+    - [Header](#header)
+    - [Navigation](#navigation)
+    - [Authentification](#authentification)
+      - [Interceptor](#interceptor)
 
 
 
@@ -666,7 +670,7 @@ Voyons le template de la page news :
 /modules/news/pages/news/news.components.html
 ```
 <div class="news">
-    <h1>News</h1>
+    <h2>News</h2>
     <news-article-short-dsiplay *ngFor="let article of (articles$ | async)" [article]="article">
     </news-article-short-dsiplay>
 </div>
@@ -709,7 +713,7 @@ Maintenant, via "Input()", nous disposons de toutes les données d'un article da
 /modules/news/components/article-short-display/article-short-display.html
 ```
 <div class="article-short-display">
-    <h2>{{article.title}}</h2>
+    <h3>{{article.title}}</h3>
     <p>{{article.description}}</p>
 </div>
 
@@ -842,7 +846,7 @@ Le composant prends en entré (@Input()) un article. Cela va nous permettre d'af
 /modules/news/components/article-dispay/article-display.component.html
 ```
 <div class="article-display">
-    <h2>{{article.title}}</h2>
+    <h3>{{article.title}}</h3>
     <p>{{article.content}}</p>
 </div>
 
@@ -1192,7 +1196,7 @@ Dans le point d'entrée du module, à savoir la page "news", il nous faut ajoute
 /modules/news/components/article-short-display/article-short-display.component.html
 ```
 <div class="article-short-display">
-    <h2>{{article.title}}</h2>
+    <h3>{{article.title}}</h3>
     <p>{{article.description}}</p>
     <a routerLink="{{article.id}}">Lire plus...</a>
 </div>
@@ -1632,7 +1636,7 @@ Etant donné que nous avons défini ```changeDetection``` à ```onPush``` il est
 /modules/news/components/manage-articles/manage-articles.component.html
 ```
 <div class="manage-article">
-    <h2>Gestion des articles</h2>
+    <h3>Gestion des articles</h3>
     <button type="button" (click)="addArticle()">Ajouter un article</button>
     <table>
         <thead>
@@ -2042,11 +2046,162 @@ Il est donc temps de mettre en place l'authentification ainsi que les guards.
 Afin de connecter nos différents modules entre eux, nous allons mettre en place le coeur de l'application.
 Le core va servire de liant entre nos modules, mais va également servir à mettre en place la navigation et le header qui seront commun. Dans un sens, ces bloques (navigation, authentification, header, etc..) sont globalement basique à quelques exception prés. De plus nous les retrouvons dans chaque application.
 
+Vous pouvez dès à présent ajouter un dossier dans "app" nommé "core" :
+
+- src
+    - app
+        - core
+
 
 
 ### 404 Not Found
 
 La page 404 est un élément important pour ne pas frustrer l'utilisateur lors de sa navigation.
+Chaque fois que l'URL ne correspondra pas à une route de l'application, l'utilisateur sera automatiquement redirigé vers la page 404.
+
+Dans le dossier core nous allons ajouter le module "not-found" :
+- src
+    - app
+        - core
+            - not-found
+
+Il s'agit d'un module, comme "news". Cependant, il est bien moins complexe. À l'inverse du module "news", il est un élément indispensable de chaque application. C'est un module commun que l'on retrouvera dans toutes les applications.
+
+Voici la structure de ```not-found```
+
+- not-found
+    - pages
+        - not-found
+            - not-found.component.html
+            - not-found.component.scss
+            - not-found.component.ts
+    index.ts
+not-found-routing.module.ts
+not-found.module.ts
+
+/not-found/pages/not-found/not-found.component.html
+```
+<div class="no-found">
+  <h2>Page introuvable !</h2>
+  <a routerLink=''>Retour à l'accueil</a>
+</div>
+```
+
+/not-found/pages/not-found/not-found.component.ts
+```
+import { Component } from "@angular/core";
+
+@Component({
+    selector: 'not-found',
+    templateUrl: 'not-found.component.html',
+    styleUrls: ['not-found.component.scss']
+})
+export class NotFoundComponent {
+    constructor() { }
+}
+```
+
+/not-found/pages/index.ts
+```
+import { NotFoundComponent } from './not-found/not-found.component';
+
+export const pages: any[] = [
+    NotFoundComponent
+];
+
+export * from './not-found/not-found.component';
+
+```
+
+/not-found/not-found-routing.module.ts
+```
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+// Pages
+import * as fromPages from './pages';
+
+const routes: Routes = [
+  {
+    path: '**',
+    component: fromPages.NotFoundComponent
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class NotFoundRoutingModule { }
+
+```
+
+/not-found/not-found.module.ts
+```
+import { NgModule } from "@angular/core";
+
+// Pages
+import * as fromPages from './pages';
+
+// Routes
+import { NotFoundRoutingModule } from './not-found-routing.module';
+
+@NgModule({
+    imports: [
+        NotFoundRoutingModule
+    ],
+    declarations: [
+        ...fromPages.pages
+    ]
+})
+export class NotFoundModule { }
+
+```
+
+
+Afin de connecter ```not-found``` au reste de l'application, il est essentiel d'ajouter une route dans le fichier app-routing.module.ts
+
+
+/app/app-routing.module.ts
+```
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+const routes: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: 'news' },
+  {
+    path: 'news',
+    loadChildren: './modules/news/news.module#NewsModule',
+  },
+  {
+    path: 'authentication',
+    loadChildren: './core/auth/auth.module#AuthModule'
+  },
+  {
+    path: '**',
+    loadChildren: './core/not-found/not-found.module#NotFoundModule'
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+```
+
+
+```
+  {
+    path: '**',
+    loadChildren: './core/not-found/not-found.module#NotFoundModule'
+  }
+```
+
+Cette route est un peu particulière. Elle est utilisée comme joker par le routeur si l'URL demandée ne correspond à aucune des routes. Ainsi l'utilisateur est redirigé vers le composant ou la route de notre choix. À noter qu'ici l'application ne retournera pas le code erreur 404 au navigateur. Il faudra mettre en place une stratégie selon le serveur utilisé.
+
+L'ordre des routes est important. Le routeur utilise une stratégie par première correspondance. Par conséquent, les routes plus spécifiques doivent être placées au-dessus des routes moins spécifiques.
 
 
 ### Header
