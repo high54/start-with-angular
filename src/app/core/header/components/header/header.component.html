@@ -3,12 +3,27 @@
         Angular 7
     </h1>
     <div class="actions">
-        <div class="user-infos" *ngIf="user; else loginTemplate">
-            {{user.username}}
-            <a routerLink="/authentication">Déconnexion</a>
+        <ul>
+            <li>
+                <a routerLink="">Accueil</a>
+            </li>
+            <li *ngIf="user">
+                {{user.username}}
+                <ul>
+                    <li *ngIf="user.role === 'admin'">
+                        <a routerLink="/news/admin">Administration</a>
+                    </li>
+                    <li>
+                        <a routerLink="/authentication">Déconnexion</a>
+                    </li>
+                </ul>
+            </li>
+            <li *ngIf="!user">
+                <a routerLink="/authentication">Connexion</a>
+            </li>
+        </ul>
+        <div>
         </div>
-        <ng-template #loginTemplate>
-            <a routerLink="/authentication">Connexion</a>
-        </ng-template>
+
     </div>
 </div>
