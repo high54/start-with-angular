@@ -1,0 +1,14 @@
+<div class="app-header">
+    <h1>
+        Angular 7
+    </h1>
+    <div class="actions">
+        <div class="user-infos" *ngIf="user; else loginTemplate">
+            {{user.username}}
+            <a routerLink="/authentication">Déconnexion</a>
+        </div>
+        <ng-template #loginTemplate>
+            <a routerLink="/authentication">Connexion</a>
+        </ng-template>
+    </div>
+</div>

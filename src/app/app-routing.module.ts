@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import * as fromAuthPages from './core/auth/pages';
+
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'news' },
   {
@@ -9,7 +11,7 @@ const routes: Routes = [
   },
   {
     path: 'authentication',
-    loadChildren: './core/auth/auth.module#AuthModule'
+    component: fromAuthPages.AppLoginComponent
   },
   {
     path: '**',

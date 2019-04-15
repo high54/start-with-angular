@@ -9,6 +9,13 @@ import { AppRoutingModule } from './app-routing.module';
 // Components
 import { AppComponent } from './app.component';
 
+// Header
+import { HeaderModule } from './core/header/header.module';
+
+// Auth Module
+import { AuthModule } from './core/auth/auth.module';
+
+
 @NgModule({
   declarations: [
     AppComponent
@@ -16,7 +23,9 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HeaderModule,
+    AuthModule
   ],
   providers: [],
   bootstrap: [AppComponent]
