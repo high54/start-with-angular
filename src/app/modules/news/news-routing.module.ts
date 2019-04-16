@@ -55,7 +55,7 @@ export const routes: Routes = [
         component: fromComponents.NewsArticleFormComponent,
         outlet: 'news-admin',
         resolve: {
-          article: fromResolvers.ArticleResolver
+          article_comments: fromResolvers.ArticleResolver
         }
       }
     ]
@@ -64,7 +64,7 @@ export const routes: Routes = [
     path: ':articleId',
     component: fromPages.NewsItemComponent,
     resolve: {
-      article: fromResolvers.ArticleResolver
+      article_comments: fromResolvers.ArticleResolver
     }
   }
 ];

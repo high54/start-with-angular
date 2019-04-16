@@ -20,6 +20,9 @@ export class NewsComponent implements OnInit {
         private route: ActivatedRoute
     ) { }
 
+    /**
+     * Récupére la liste des articles depuis la route, qui récupére elle même les articles depuis le resolver
+     */
     ngOnInit(): void {
         this.articles$ = this.route.data.pipe(map((data: { articles: Article[] }) => data.articles));
     }

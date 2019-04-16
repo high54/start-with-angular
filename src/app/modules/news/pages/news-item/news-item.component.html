@@ -5,6 +5,6 @@
         </news-article-display>
         <news-article-author [author]="article?.author"></news-article-author>
     </div>
-    <news-article-comments *ngFor="let comment of (comments$ | async)" [comment]="comment">
+    <news-article-comments *ngFor="let comment of comments" [comment]="comment">
     </news-article-comments>
 </div>

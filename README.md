@@ -33,6 +33,7 @@ Page du tutoriel :
   - [Resolver](#resolver)
     - [Qu'est ce qu'un Resolver ?](#quest-ce-quun-resolver)
     - [ArtileListResolver](#artilelistresolver)
+    - [ArticleResolver](#articleresolver)
   - [Faisons le point sur notre application.](#faisons-le-point-sur-notre-application)
   - [News Administration](#news-administration)
   - [Gestion des articles](#gestion-des-articles)
@@ -1578,7 +1579,7 @@ export const routes: Routes = [
 
   ```
 
-  Comme vous pouvez le constater notre route prendre un paramètre ```resolve``` qui prends un un objet composé d'une clé qui nous servira pour récupérer nos données et du resolver en valeur.
+  Comme vous pouvez le constater notre route prendre un paramètre ```resolve``` qui prends un objet composé d'une clé qui nous servira pour récupérer nos données et du resolver en valeur.
 
 /modules/news/news.module.ts
 ```
@@ -1639,7 +1640,133 @@ export class NewsComponent implements OnInit {
 
 ```
 
-Ainsi nous avons retiré le service du composant pour déplacer la récupération de données dans le Resolver d'Angular. Il n'i a pas de changement brutal, nous passons d'un observable à un autre. Sauf que cette fois-ci nous passons par la route pour les données.
+Ainsi nous avons retiré le service du composant pour déplacer la récupération de données dans le Resolver d'Angular. Il n'i a pas de changement brutal, nous passons d'un observable à un autre. Mais cette fois-ci nous passons par la route pour les données.
+
+
+### ArticleResolver
+
+Nous allons renouveller l'opération pour l'affichage d'un article.
+
+/modules/news/resolvers/article.resolver.ts
+```
+import { Injectable } from '@angular/core';
+import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
+import { Observable, forkJoin } from 'rxjs';
+import { Article } from '../../models/article.interface';
+import { ArticleService, CommentService } from '../../services';
+import { Comment } from '../../models/comment.interface';
+import { map } from 'rxjs/operators';
+
+@Injectable()
+export class ArticleResolver implements Resolve<{ article: Article, comments: Comment[] }> {
+    constructor(
+        private articleService: ArticleService,
+        private commentService: CommentService
+    ) { }
+
+    /**
+     * Retourne un observable contenant un article et les commentaires lié à l'article
+     * @param route ActivatedRouteSnapshot
+     */
+    resolve(route: ActivatedRouteSnapshot): Observable<{ article: Article, comments: Comment[] }> {
+        const articleId = parseInt(route.paramMap.get('articleId'), 10);
+        // forkJoin permet d'attendre la résolution des deux traitement asynchrone, puis les retournes en un seul objet
+        return forkJoin(this.articleService.getArticle(articleId), this.commentService.getCommentsByArticle(articleId))
+            .pipe(map(([article, comments]) => {
+                return { article, comments };
+            }));
+    }
+}
+
+
+```
+
+Cette fois-ci nous utilisons le resolver pour retourner l'article par son ID mais également les commentaires associés à l'article.
+```forkJoin``` nous permet de d'attendre que tous les observables sont terminé et de retourner les dernières valeurs émissent.
+
+Il est possible d'utiliser plusieurs resolver mais c'est plus efficace dans notre cas de récupérer tout en même temps.
+Par soucis de confort utilisateur vous pourriez les séparer afin de charger en priorité l'article puis les commentaires séparément.
+
+/modules/news/resolvers/index.ts
+```
+import { ArticleListResolver } from './article/article-list.resolver';
+import { ArticleResolver } from './article/article.resolver';
+export const resolvers: any[] = [
+    ArticleListResolver,
+    ArticleResolver
+];
+
+
+export * from './article/article-list.resolver';
+export * from './article/article.resolver';
+
+```
+
+
+/modules/news/news-routing.module.ts
+```
+ {
+    path: ':articleId',
+    component: fromPages.NewsItemComponent,
+    resolve: {
+      article_comments: fromResolvers.ArticleResolver
+    }
+```
+
+/modules/news/pages/news-item/news-item.component.ts
+```
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+// Rxjs
+import {Subscription } from 'rxjs';
+// Models
+import { Article } from '../../models/article.interface';
+import { Comment } from '../../models/comment.interface';
+
+@Component({
+    selector: 'app-news-item',
+    styleUrls: ['news-item.component.scss'],
+    templateUrl: 'news-item.component.html',
+})
+export class NewsItemComponent implements OnInit, OnDestroy {
+    article$: Subscription;
+    article: Article;
+    comments: Comment[];
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router
+    ) { }
+
+    /**
+     * Récupére l'article et les commentaires lié à l'article depuis la route
+     * Sinon redirige vers la page d'accueil
+     */
+    ngOnInit(): void {
+        if (this.route.snapshot.params.articleId) {
+            this.article$ = this.route.data.subscribe((data: { article_comments: { article: Article, comments: Comment[] } }) => {
+                const { article, comments } = data.article_comments;
+                this.article = article;
+                this.comments = comments;
+            });
+        } else {
+            this.router.navigate(['../']);
+        }
+    }
+
+    /**
+     * On Destroy, désinscription de l'observable pour éviter les fuites mémoires.
+     */
+    ngOnDestroy(): void {
+        this.article$.unsubscribe();
+    }
+}
+
+```
+
+Fini les services dans la page news-item. Le ```if``` présent dans la méthode ```ngOnInit()``` est présent pour la décoration, normalement l'utilisateur ne devrait jamais passer par le ```else```. Cependant sécurité maximum !
+
+
+
 
 ## Faisons le point sur notre application.
 Actuellement, il est possible de visualiser l'ensemble des articles, d'afficher un article par son ID avec les commentaires et l'auteur. Si nous survolons le nom de l'auteur, il passe en surbrillance. Concernant les commentaires, un filtre est en place pour censurer.

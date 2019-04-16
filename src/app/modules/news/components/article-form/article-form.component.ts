@@ -1,13 +1,14 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, FormControl, AbstractControl } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 // Rxjs
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 // Services
 import { ArticleService } from '../../services';
 // Models
 import { Article } from '../../models/article.interface';
-import { map } from 'rxjs/operators';
+import { Comment } from '../../models/comment.interface';
+
 @Component({
     selector: 'news-article-form',
     styleUrls: ['article-form.component.scss'],
@@ -42,8 +43,9 @@ export class NewsArticleFormComponent implements OnInit, OnDestroy {
         if (this.route.snapshot.params.articleId) {
             this.isEdit = true;
             this.pageTitle = `Modifier un article`;
-            this.article$ = this.route.data.subscribe((data: { article: Article }) => {
-                this.article = data.article;
+            this.article$ = this.route.data.subscribe((data: { article_comments: { article: Article, comments: Comment[] } }) => {
+                const { article } = data.article_comments;
+                this.article = article;
                 this.articleForm.patchValue(this.article);
 
             });
