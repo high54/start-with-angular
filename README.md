@@ -152,7 +152,7 @@ npm i -g json-server
 
 À la racine de votre projet il vous faut créer un fichier db.json avec les informations suivante :
 
-```
+``` json
 {
     "articles": [],
     "comments":[]
@@ -308,7 +308,7 @@ Je les ai ajouté afin de faciliter la lecture du code quand le module va grossi
 Voici le code TypeScript du composant article-short-display :
 
 /modules/news/components/article-short-display/article-short-display.component.ts
-```
+``` typescript
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
@@ -332,7 +332,7 @@ export class NewsArticleShortDisplayComponent {
 Dans le dossier components nous avons un fichier index.ts qui va importer tous les composants et les exporter en une seule variable. Plutôt pratique pour aérer le fichier news.module.ts.
 
 /modules/news/components/index.ts
-```
+``` typescript
 import { NewsArticleShortDisplayComponent } from './article-short-display/article-short-display.component';
 
 export const components: any[] = [
@@ -358,7 +358,7 @@ Via ```OnPush``` nous indiquons qu'il n'est pas utile d'effectuer une détection
 	
 Voyons maintenant la page news :
 /modules/news/pages/news/news.component.ts
-```
+``` typescript
 import { Component } from '@angular/core';
 
 @Component({
@@ -374,7 +374,7 @@ export class NewsComponent {
 Le fichier index.ts du dossier "pages" :
 
 /modules/news/pages/index.ts
-```
+``` typescript
 import { NewsComponent } from './news/news.component';
 
 export const pages: any[] = [
@@ -389,7 +389,7 @@ export * from './news/news.component';
 Le service "article" :
 
 /modules/news/services/article.service.ts
-```
+``` typescript
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 // Rxjs
@@ -446,7 +446,7 @@ export class ArticleService {
 le fichier index.ts du dossier "services":
 
 /modules/news/services/index.ts
-```
+``` typescript
 import { ArticleService } from './article/article.service';
 
 export const services: any[] = [
@@ -459,7 +459,7 @@ export * from './article/article.service';
 Nous allons avoir besoin d'un modèle de données :
 
 /models/article.interface.ts
-```
+``` typescript
 export interface Article {
     id?: number;
     title?: string;
@@ -474,7 +474,7 @@ export interface Article {
 Nous allons configurer une première route qui va pointer vers notre page "news":
 
 /modules/news/news-routing.module.ts
-```
+``` typescript
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -503,7 +503,7 @@ export class NewsRoutingModule { }
 Maintenant que nous avons notre route, nos pages, le service et le composant, nous pouvons mettre en place le fichier news.module.ts :
 
 /modules/news/news.module.ts
-```
+``` typescript
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -542,7 +542,7 @@ Via l'utilisation du spread operator, nous déclarons les pages, composants et s
 Maintenant pour connecter notre module au reste de l'application, nous avons simplement à ajouter une route dans le fichier app-routing.module.ts :
 
 /src/app/app-routing.module.ts
-```
+``` typescript
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -566,7 +566,7 @@ export class AppRoutingModule { }
 Si vous souhaitez gagner du temps lors de ce cours, vous pouvez ajouter une route au fichier app-routing.module.ts afin d'afficher directement le module "news" !
 
 /src/app/app-routing.module.ts
-```
+``` typescript
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -598,7 +598,7 @@ http://localhost:4200
 Actuellement il n'i a pas de contenu, d'ailleurs vous pouvez supprimer le contenu du fichier app.component.html pour ne laisser que la balise router-outlet :
 
 /src/app/app.component.html
-```
+``` html
 
 <router-outlet></router-outlet>
 
@@ -610,7 +610,7 @@ Actuellement il n'i a pas de contenu, d'ailleurs vous pouvez supprimer le conten
 Dans un premier temps nous allons ajouter quelques articles à notre "base de données" db.json :
 
 /db.json
-```
+``` json
 {
     "articles": [
         {
@@ -643,7 +643,7 @@ json-server --watch db.json
 Notre service "article.service" est prêt à transmettre les données, nous allons l'utiliser dans notre page "news" :
 
 /modules/news/pages/news/news.components.ts
-```
+``` typescript
 import { Component, OnInit } from '@angular/core';
 // Rxjs
 import { Observable } from 'rxjs';
@@ -688,7 +688,7 @@ Mais le pipe "async" est spécialement dédié à cela.
 Voyons le template de la page news :
 
 /modules/news/pages/news/news.components.html
-```
+``` html
 <div class="news">
     <h2>News</h2>
     <news-article-short-dsiplay *ngFor="let article of (articles$ | async)" [article]="article">
@@ -703,7 +703,7 @@ Cela va avoir pour conséquence d'afficher autant de fois le composant article-s
 À ce stade, l'application n'affichera pas encore d'information. Pour pallier à cela nous devons nous occuper du composant :
 
 /modules/news/components/article-short-display/article-short-display.ts
-```
+``` typescript
 import { Component, Input } from '@angular/core';
 import { Article } from '../../models/article.interface';
 
@@ -731,7 +731,7 @@ Du moment que toto contient un article.
 Maintenant, via "Input()", nous disposons de toutes les données d'un article dans notre composant, il est donc temps d'afficher les informations :
 
 /modules/news/components/article-short-display/article-short-display.html
-```
+``` html
 <div class="article-short-display">
     <h3>{{article.title}}</h3>
     <p>{{article.description}}</p>
@@ -751,7 +751,7 @@ Dans notre dossier pages, nous allons ajouter un composant news-item :
 ![diagramme](https://github.com/high54/start-with-angular/blob/master/docs/page%20news-item.png?raw=true)
 
 /modules/news/pages/news-item/news-item.component.ts
-```
+``` typescript
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 // Rxjs
@@ -791,7 +791,7 @@ Sinon, on redirige l'utilisateur vers la page de toutes les news.
 Comme nous venons d'ajouter un composant dans le dossier pages, il est nécéssaire d'ajouter le composant dans le fichier index.ts :
 
 /modules/news/pages/index.ts
-```
+``` typescript
 import { NewsComponent } from './news/news.component';
 import { NewsItemComponent } from './news-item/news-item.component';
 
@@ -808,7 +808,7 @@ export * from './news-item/news-item.component';
 Profitons-en pour ajouter une nouvelle route dans le fichier news-routing.module :
 
 /modules/news/news-routing.module.ts
-```
+``` typescript
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -843,7 +843,7 @@ Enfin, cette route pointe sur notre nouveau composant NewsItemComponent.
 Cette page va afficher plusieurs composants, nous allons les mettre en place :
 ### article-display composant
 /modules/news/components/article-dispay/article-display.component.ts
-```
+``` typescript
 import { Component, Input } from '@angular/core';
 
 // Models
@@ -864,7 +864,7 @@ export class NewsArticleDisplayComponent {
 Le composant prends en entré (@Input()) un article. Cela va nous permettre d'afficher les informations de l'article dans le template :
 
 /modules/news/components/article-dispay/article-display.component.html
-```
+``` html
 <div class="article-display">
     <h3>{{article.title}}</h3>
     <p>{{article.content}}</p>
@@ -873,7 +873,7 @@ Le composant prends en entré (@Input()) un article. Cela va nous permettre d'af
 ```
 ### article-author composant
 /modules/news/components/article-author/article-author.component.ts
-```
+``` typescript
 import { Component, Input } from '@angular/core';
 
 // Models
@@ -893,7 +893,7 @@ export class NewsArticleAuthorComponent {
 Ici c'est l'auteur qui est passé au composant (@Input() author) afin d'afficher la propriétée "fullName" de l'objet Author :
 
 /modules/news/components/article-author/article-author.component.html
-```
+``` html
 <div class="article-author">
     <h3>{{author.fullName}}</h3>
 </div>
@@ -901,7 +901,7 @@ Ici c'est l'auteur qui est passé au composant (@Input() author) afin d'afficher
 ```
 
 /modules/news/components/index.ts
-```
+``` typescript
 import { NewsArticleShortDisplayComponent } from './article-short-display/article-short-display.component';
 import { NewsArticleDisplayComponent } from './article-display/article-display.component';
 import { NewsArticleAuthorComponent } from './article-author/article-author.component';
@@ -924,7 +924,7 @@ Evidemment le fichier index.ts des composants est mis à jour.
 Etant donné que nous avons ajouté l'auteur de l'article, nous allons ajouter une interface et modifier l'interface des articles :
 ### author interface
 /modules/news/models/author.interface.ts
-```
+``` typescript
 export interface Author {
     fullName?: string;
 }
@@ -932,7 +932,7 @@ export interface Author {
 ```
 
 /modules/news/models/article.interface.ts
-```
+``` typescript
 import { Author } from './author.interface';
 
 export interface Article {
@@ -950,7 +950,7 @@ export interface Article {
 Profitons-en pour ajouter l'interface pour les commentaires :
 
 /modules/news/models/comment.interface.ts
-```
+``` typescript
 import { Author } from './author.interface';
 
 export interface Comment {
@@ -966,7 +966,7 @@ export interface Comment {
 Enfin pour terminer avec les composants, nous pouvons ajouter article-comments :
 
 /modules/news/components/article-comments/article-comments.components.ts
-```
+``` typescript
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Comment } from '../../models/comment.interface';
 
@@ -986,7 +986,7 @@ export class NewsArticleCommentsComponent {
 article-comments prends en entré un commentaire : ```@Input() comment: Comment``` afin d'afficher les informations dans le template :
 
 /modules/news/components/article-comments/article-comments.components.html
-```
+``` html
 <div class="article-comments">
     <h4>{{comment.author}}</h4>
     <p>{{comment.content}}</p>
@@ -995,7 +995,7 @@ article-comments prends en entré un commentaire : ```@Input() comment: Comment`
 Le fichier index.ts mise à jour avec notre nouveau composant :
 
 /modules/news/components/index.ts
-```
+``` typescript
 import { NewsArticleShortDisplayComponent } from './article-short-display/article-short-display.component';
 import { NewsArticleDisplayComponent } from './article-display/article-display.component';
 import { NewsArticleAuthorComponent } from './article-author/article-author.component';
@@ -1017,7 +1017,7 @@ export * from './article-comments/article-comments.component';
 Afin de récupérer les commentaires, nous allons avoir besoin d'un service :
 
 /modules/news/services/comment/comment.service.ts
-```
+``` typescript
 import { Injectable } from '@angular/core';
 import { Comment } from '../../models/comment.interface';
 import { Observable, throwError } from 'rxjs';
@@ -1069,7 +1069,7 @@ C'est un service assez standard, il permet d'effectuer un CRUD complet sur les c
 Le fichier index.ts des services :
 
 /modules/news/services/index.ts
-```
+``` typescript
 import { ArticleService } from './article/article.service';
 import { CommentService } from './comment/comment.service';
 export const services: any[] = [
@@ -1087,7 +1087,7 @@ export * from './comment/comment.service';
 Nous pouvons dès à présent modifier notre base de données afin d'y inclure des commentaires :
 
 db.json
-```
+``` json
 {
     "articles": [
         {
@@ -1152,7 +1152,7 @@ Maintenant que nous avons mis en place de quoi récupérer les commentaires, il 
 Nous allons modifier la page news-item pour faire appel à nos composants :
 
 /modules/news/pages/news-item.component.ts
-```
+``` typescript
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 // Rxjs
@@ -1194,7 +1194,7 @@ export class NewsItemComponent implements OnInit {
 Ici nous utilisons le service des commentaires afin de les récupérer.
 
 /modules/news/pages/news-item.component.html
-```
+``` html
 <div class="news-item">
     <div *ngIf="article$ | async as article">
         <news-article-display [article]="article"></news-article-display>
@@ -1213,7 +1213,7 @@ Dans le template nous ajoutons une div avec un "*ngIf" afin de vérifier la pré
 Nous allons ajouter un formulaire pour permettre aux utilisateurs de laisser des commentaires sur un article.
 
 /modules/news/components/comment-form/comment-form.component.ts
-```
+``` typescript
 
 import { Component, Input, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators, AbstractControl, FormGroup } from '@angular/forms';
@@ -1300,11 +1300,11 @@ Plus tard nous mettrons en place l'authentification afin d'autocompléter direct
 
 
 /modules/news/components/comment-form/comment-form.component.html
-```
+``` html
 <div class="comment-form">
     <h3>Ajouter un commentaire</h3>
 
-    <divrole="alert" *ngIf="isCommented">
+    <div role="alert" *ngIf="isCommented">
            Commentaire ajouté ! 
            Il sera soumis à modération avant d'être affiché.
     </div>
@@ -1343,7 +1343,7 @@ Il ne manque plus qu'une chose pour pouvoir accéder à un article via son ID. C
 Dans le point d'entrée du module, à savoir la page "news", il nous faut ajouter un lien vers l'article complet. Le composant article-short-display étant dédié à l'affichage des articles dans la page "news", c'est dans son template que nous ajoutons le lien :
 
 /modules/news/components/article-short-display/article-short-display.component.html
-```
+``` html
 <div class="article-short-display">
     <h3>{{article.title}}</h3>
     <p>{{article.description}}</p>
@@ -1355,7 +1355,7 @@ Dans le point d'entrée du module, à savoir la page "news", il nous faut ajoute
 Maintenant vous devriez pouvoir y accéder facilement. Mais il serait bon d'ajouter un lien pour revenir à l'accueil du module. Cette fois ci nous allons placer le lien directement dans la page "news-item".
 
 /modules/news/pages/news-item/news-item.component.html
-```
+``` html
 <div class="news-item">
     <a routerLink="../">Retour</a>
     <div *ngIf="article$ | async as article">
@@ -1377,7 +1377,7 @@ Actuellement vous avez découvert les bases d'Angular de manière avancée, mais
 Dans ce chapitre nous allons mettre en place un ng-content afin de placer le bouton retour de façon personnalisé.
 
 /modules/news/pages/news-item/news-item.component.html
-```
+``` html
 <div class="news-item">
     <div *ngIf="article$ | async as article">
         <news-article-display [article]="article">
@@ -1397,7 +1397,7 @@ Si vous vous rendez sur la page : ```http://localhost:4200/news/1``` le lien de 
 Pour remédier à cela, il suffit de placer dans le composant article-display une balise ng-content :
 
 /modules/news/components/article-display/article-display.component.html
-```
+``` html
 <div class="article-display">
     <ng-content></ng-content>
     <h2>{{article.title}}</h2>
@@ -1411,7 +1411,7 @@ Cependant imaginons que je souhaite passer plusieurs balises dans le composant, 
 
 La balise ng-content dispose elle aussi d'un sélecteur :
 
-```
+``` html
 <ng-content select="a"></ng-content>
 ```
 Ainsi dans cet exemple, je vais pouvoir sélectionner une balise "a" pour l'afficher.
@@ -1421,7 +1421,7 @@ Le sélecteur de ng-content permet de sélectionner toutes les balises HTML, les
 Autant en profiter et placer le ng-content sous le titre de l'article :
 
 /modules/news/components/article-display/article-display.component.html
-```
+``` html
 <div class="article-display">
     <h2>{{article.title}}</h2>
     <ng-content select="a"></ng-content>
@@ -1436,7 +1436,7 @@ Un pipe permet de transformer des données, il ne s'occupe pas du DOM. Jusqu'à 
 Dans le dossier pipes du module news :
 
 /modules/news/pipes/comment-filter/comment-filter.pipe.ts
-```
+``` typescript
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
@@ -1454,7 +1454,7 @@ Le pipe est plutôt simple,  il va remplacer dans une valeur donnée, ici le mot
 
 
 /modules/news/pipes/index.ts
-```
+``` typescript
 import { CommentFilterPipe } from './comment-filter/comment-filter.pipe';
 
 export const pipes: any[] = [
@@ -1466,7 +1466,7 @@ export * from './comment-filter/comment-filter.pipe';
 ```
 
 /modules/news/news.modules.ts
-```
+``` typescript
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -1508,7 +1508,7 @@ export class NewsModule { }
 Maintenant que le pipe est configuré ainsi que déclaré nous pouvons l'utiliser :
 
 /modules/news/components/article-comments/article-comments.component.html
-```
+``` html
 <div class="article-comments">
     <h4>{{comment.author.fullName}}</h4>
     <p>{{comment.content | commentFilter}}</p>
@@ -1517,7 +1517,7 @@ Maintenant que le pipe est configuré ainsi que déclaré nous pouvons l'utilise
 
 Pour tester le pipe, il suffit d'ajouter le mot "Andouille" dans le contenu d'un commentaire du fichier db.json
 
-```
+``` json
         {
             "id":1,
             "author":{
@@ -1535,7 +1535,7 @@ Une directive contrairement à un pipe permet de modifier le DOM. Nous allons ut
 Dans le dossiers directives du modules news :
 
 /modules/news/directives/highlight/highlight.directive.ts
-```
+``` typescript
 import { Directive, ElementRef, HostListener } from "@angular/core";
 
 @Directive({
@@ -1576,7 +1576,7 @@ Pour déclarer la directive, nous utilisons encore un fichier index.ts. Cela n'e
 
 
 /modules/news/directives/index.ts
-```
+``` typescript
 
 import { HighlightDirective } from './highlight/highlight.directive';
 
@@ -1589,7 +1589,7 @@ export * from './highlight/highlight.directive';
 ```
 
 /modules/news/news.module.ts
-```
+``` typescript
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -1636,7 +1636,7 @@ export class NewsModule { }
 Deuxième étape, utiliser la directive :
 
 /modules/news/components/article-author/article-author.component.html
-```
+``` html
 <div class="article-author">
     <h3>Write by <span newsHighlight>{{author.fullName}}</span></h3>
 </div>
@@ -1671,7 +1671,7 @@ Le Resolver permet d'attendre le retour d'un observable avant l'initialisation o
 Le premier Resolver que nous allons mettre en place pour notre application est celui qui va s'occuper de la liste des articles.
 
 /modules/news/resolvers/article/article-list.resolver.ts
-```
+``` typescript
 import { Injectable } from '@angular/core';
 import { Article } from '../../models/article.interface';
 import { Resolve } from '@angular/router';
@@ -1693,7 +1693,7 @@ export class ArticleListResolver implements Resolve<Article[]> {
 ```
 
 /modules/news/resolvers/index.ts
-```
+``` typescript
 import { ArticleListResolver } from './article/article-list.resolver';
 
 export const resolvers: any[] = [
@@ -1712,7 +1712,7 @@ Simple et efficace, il utilise simplement notre service ```ArticleService``` pou
 Afin de pouvoir l'utiliser il nous faut d'abord modifier la route, puis le composant qui affiche les articles sans oublier de le déclarer dans notre NgModule :
 
 /modules/news/news-routing.module.ts
-```
+``` typescript
 // routes
 export const routes: Routes = [
 {
@@ -1732,7 +1732,7 @@ export const routes: Routes = [
   Comme vous pouvez le constater notre route prendre un paramètre ```resolve``` qui prends un objet composé d'une clé qui nous servira pour récupérer nos données et du resolver en valeur.
 
 /modules/news/news.module.ts
-```
+``` typescript
 ...
 
 // Resolvers
@@ -1760,7 +1760,7 @@ export class NewsModule { }
 ```
 
 /modules/news/pages/news/news.component.ts
-```
+``` typescript
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 // Rxjs
@@ -1798,7 +1798,7 @@ Ainsi nous avons retiré le service du composant pour déplacer la récupératio
 Nous allons renouveller l'opération pour l'affichage d'un article.
 
 /modules/news/resolvers/article.resolver.ts
-```
+``` typescript
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable, forkJoin } from 'rxjs';
@@ -1838,7 +1838,7 @@ Il est possible d'utiliser plusieurs resolver mais c'est plus efficace dans notr
 Par soucis de confort utilisateur vous pourriez les séparer afin de charger en priorité l'article puis les commentaires séparément.
 
 /modules/news/resolvers/index.ts
-```
+``` typescript
 import { ArticleListResolver } from './article/article-list.resolver';
 import { ArticleResolver } from './article/article.resolver';
 export const resolvers: any[] = [
@@ -1854,7 +1854,7 @@ export * from './article/article.resolver';
 
 
 /modules/news/news-routing.module.ts
-```
+``` typescript
  {
     path: ':articleId',
     component: fromPages.NewsItemComponent,
@@ -1864,7 +1864,7 @@ export * from './article/article.resolver';
 ```
 
 /modules/news/pages/news-item/news-item.component.ts
-```
+``` typescript
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 // Rxjs
@@ -1949,7 +1949,7 @@ news-admin affichera en premier la liste des articles dans un tableau avec des b
 Nous allons utiliser un router-outlet auxiliaire afin de ne jamais avoir besoin de quitter la page news-admin pour effectuer toutes les opérations.
 
 /modules/news/pages/news-admin/news-admin.component.html
-```
+``` html
 <div class="news-admin">
     <div class="nav">
         <a [routerLink]="[{ outlets: { newsAdmin: ['moderate-comments'] } }]">Modérer les commentaires</a>
@@ -1966,7 +1966,7 @@ Dans un premier temps nous allons mettre en place un composant pour afficher dan
 
 ### manage-articles component
 /modules/news/components/manage-articles/manage-articles.component.ts
-```
+``` typescript
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -2058,7 +2058,7 @@ Etant donné que nous avons défini ```changeDetection``` à ```onPush``` il est
 
 
 /modules/news/components/manage-articles/manage-articles.component.html
-```
+``` html
 <div class="manage-article">
     <h3>Gestion des articles</h3>
     <button type="button" (click)="addArticle()">Ajouter un article</button>
@@ -2100,7 +2100,7 @@ Etant donné que nous avons défini ```changeDetection``` à ```onPush``` il est
 Afin de gérer l'ajout et l'édition d'un article nous devons mettre en place un formulaire :
 
 /modules/news/components/article-form/article-form.component.ts
-```
+``` typescript
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -2199,7 +2199,7 @@ export class NewsArticleFormComponent implements OnInit, OnDestroy {
 ```
 
 /modules/news/components/article-form/article-form.component.html
-```
+``` html
 <div class="article-form">
     <h3>{{title}}</h3>
     <form [formGroup]="articleForm">
@@ -2234,7 +2234,7 @@ Pour déterminer si un commentaire à déjà était modéré, il est nécéssair
 
 
 /modules/news/models/comment.interface.ts
-```
+``` typescript
 import { Author } from './author.interface';
 
 export interface Comment {
@@ -2249,7 +2249,7 @@ export interface Comment {
 
 
 /db.json
-```
+``` json
 {
   "articles": [
     {
@@ -2325,7 +2325,7 @@ export interface Comment {
 ### moderate-comments
 
 /modules/news/components/moderate-comments/moderate-comments.component.ts
-```
+``` typescript
 import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommentService } from '../../services';
 import { Subscription, Observable } from 'rxjs';
@@ -2382,7 +2382,7 @@ export class NewsModerateCommentsComponent implements OnInit {
 ```
 
 /modules/news/components/moderate-comments/moderate-comments.component.html
-```
+``` html
 <div class="moderate-comments">
     <div class="comment-card" *ngFor="let comment of (comments$ | async)">
         <div class="actions">
@@ -2399,7 +2399,7 @@ export class NewsModerateCommentsComponent implements OnInit {
 Maintenant que nous avons mis en place la modération des commentaires, nous pouvons l'utiliser dans le composant qui les affichent. Pour ce faire nous allons modifier le service des commentaires :
 
 /modules/news/services/comment.service.ts
-```
+``` typescript
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 //Rxjs
@@ -2511,7 +2511,7 @@ not-found-routing.module.ts
 not-found.module.ts
 
 /not-found/pages/not-found/not-found.component.html
-```
+``` html
 <div class="no-found">
   <h2>Page introuvable !</h2>
   <a routerLink=''>Retour à l'accueil</a>
@@ -2519,7 +2519,7 @@ not-found.module.ts
 ```
 
 /not-found/pages/not-found/not-found.component.ts
-```
+``` typescript
 import { Component } from "@angular/core";
 
 @Component({
@@ -2533,7 +2533,7 @@ export class NotFoundComponent {
 ```
 
 /not-found/pages/index.ts
-```
+``` typescript
 import { NotFoundComponent } from './not-found/not-found.component';
 
 export const pages: any[] = [
@@ -2545,7 +2545,7 @@ export * from './not-found/not-found.component';
 ```
 
 /not-found/not-found-routing.module.ts
-```
+``` typescript
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -2568,7 +2568,7 @@ export class NotFoundRoutingModule { }
 ```
 
 /not-found/not-found.module.ts
-```
+``` typescript
 import { NgModule } from "@angular/core";
 
 // Pages
@@ -2594,7 +2594,7 @@ Afin de connecter ```not-found``` au reste de l'application, il est essentiel d'
 
 
 /app/app-routing.module.ts
-```
+``` typescript
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -2623,7 +2623,7 @@ export class AppRoutingModule { }
 ```
 
 
-```
+``` 
   {
     path: '**',
     loadChildren: './core/not-found/not-found.module#NotFoundModule'
