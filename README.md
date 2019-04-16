@@ -2,6 +2,21 @@
 # Débuter avec Angular 7+ et structure évolutive
 Dans ce cours nous allons mettre en place notre environnement de travail ainsi qu'une structure d'application évolutive.
 
+Installation locale :
+
+```
+git clone https://github.com/high54/start-with-angular.git
+cd start-with-angular
+npm i
+
+ng serve --o
+
+// Dans une seconde invite de commande 
+json-server --watch db.json
+```
+
+
+
 Page du tutoriel :
 [GitHub](https://high54.github.io/start-with-angular/)
 

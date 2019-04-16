@@ -1,11 +1,13 @@
 <div class="moderate-comments">
     <h3>Modération des commentaires</h3>
-    <div class="comment-card" *ngFor="let comment of (comments$ | async)">
-        <div class="actions">
-            <button type="button" (click)="moderateComment(comment, true)">Valider</button>
-            <button type="button" (click)="moderateComment(comment, false)">Refuser</button>
-            <p>{{ comment.content }}</p>
-            <span>{{ comment.author.fullName }}</span>
+    <div class="card" *ngFor="let comment of (comments$ | async)">
+        <div class="card-header">
+            {{ comment.author.fullName }}
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{ comment.content }}</p>
+            <button type="button" class="btn btn-primary" (click)="moderateComment(comment, true)">Valider</button>
+            <button type="button" class="btn btn-danger" (click)="moderateComment(comment, false)">Refuser</button>
         </div>
     </div>
 </div>
