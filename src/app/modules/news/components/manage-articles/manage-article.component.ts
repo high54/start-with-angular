@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 // Rxjs
 import { Observable } from 'rxjs';
@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { ArticleService } from '../../services';
 // Models
 import { Article } from '../../models/article.interface';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'news-manage-article',
@@ -17,6 +18,7 @@ import { Article } from '../../models/article.interface';
 export class NewsManageArticlesComponent implements OnInit {
     articles$: Observable<Article[]>;
     constructor(
+        private route: ActivatedRoute,
         private articleService: ArticleService,
         private router: Router,
         private cdr: ChangeDetectorRef
@@ -25,7 +27,7 @@ export class NewsManageArticlesComponent implements OnInit {
      * Fait référence à la méthode qui utilise ArticleService
      */
     ngOnInit(): void {
-        this.fetchData();
+        this.articles$ = this.route.data.pipe(map((data: { articles: Article[] }) => data.articles));
     }
     /**
      * Redirige l'utilisateur sur le composant "article-form"

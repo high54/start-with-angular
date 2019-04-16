@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 // Rxjs
 import { Observable } from 'rxjs';
-// Services
-import { ArticleService } from '../../services';
+import { map } from 'rxjs/operators';
 // Models
 import { Article } from '../../models/article.interface';
+
 
 @Component({
     selector: 'app-news',
@@ -16,10 +17,10 @@ export class NewsComponent implements OnInit {
     articles$: Observable<Article[]>;
 
     constructor(
-        private articleService: ArticleService
+        private route: ActivatedRoute
     ) { }
 
-    ngOnInit() {
-        this.articles$ = this.articleService.getArticles();
+    ngOnInit(): void {
+        this.articles$ = this.route.data.pipe(map((data: { articles: Article[] }) => data.articles));
     }
 }

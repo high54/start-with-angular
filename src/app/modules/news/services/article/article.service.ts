@@ -22,7 +22,7 @@ export class ArticleService {
             .pipe(catchError((error: any) => throwError(JSON.stringify(error))));
     }
     /**
-     * Récupère tous les articles
+     * Récupére tous les articles
      */
     getArticles(): Observable<Article[]> {
         return this.http
@@ -30,7 +30,7 @@ export class ArticleService {
             .pipe(catchError((error: any) => throwError(JSON.stringify(error))));
     }
     /**
-     * Récupère un article en fonction de son ID
+     * Récupére un article en fonction de son ID
      * @param articleId ID of Article Object
      */
     getArticle(articleId: number): Observable<Article> {

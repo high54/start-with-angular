@@ -35,15 +35,6 @@
         "fullName": "Author N"
       },
       "id": 4
-    },
-    {
-      "title": "Super article",
-      "description": "desc",
-      "content": "content",
-      "author": {
-        "fullName": "Author N"
-      },
-      "id": 5
     }
   ],
   "comments": [

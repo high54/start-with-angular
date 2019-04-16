@@ -2,11 +2,12 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/
 import { FormBuilder, Validators, FormGroup, FormControl, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 // Rxjs
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 // Services
 import { ArticleService } from '../../services';
 // Models
 import { Article } from '../../models/article.interface';
+import { map } from 'rxjs/operators';
 @Component({
     selector: 'news-article-form',
     styleUrls: ['article-form.component.scss'],
@@ -41,9 +42,10 @@ export class NewsArticleFormComponent implements OnInit, OnDestroy {
         if (this.route.snapshot.params.articleId) {
             this.isEdit = true;
             this.pageTitle = `Modifier un article`;
-            this.article$ = this.articleService.getArticle(this.route.snapshot.params.articleId).subscribe(articleRes => {
-                this.article = articleRes;
-                this.articleForm.patchValue(articleRes);
+            this.article$ = this.route.data.subscribe((data: { article: Article }) => {
+                this.article = data.article;
+                this.articleForm.patchValue(this.article);
+
             });
         }
     }
@@ -84,7 +86,7 @@ export class NewsArticleFormComponent implements OnInit, OnDestroy {
                 value.author = {
                     fullName: 'Author N'
                 };
-                // Demande au service d'ajouter l'article et redirige l'utilisateur vers la liste de l'admin
+                // Demande au service d'ajouter l'article et redirige l'utilisateur vers la liste des articles
                 this.articleService.createArticle(value).toPromise().then((createArticleRes) => {
                     this.router.navigate(['/news/admin/', { outlets: { 'news-admin': ['manage-articles'] } }]);
                 }, (createArticleRej) => {

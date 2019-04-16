@@ -1,5 +1,5 @@
 <div class="news-item">
-    <div *ngIf="article$ | async as article">
+    <div *ngIf="article">
         <news-article-display [article]="article">
             <a routerLink="../">Retour</a>
         </news-article-display>

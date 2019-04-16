@@ -8,12 +8,18 @@ import * as fromComponents from './components';
 // Guard from Auth
 import { AuthGuard } from 'src/app/core/auth/guards';
 
+// Resolvers
+import * as fromResolvers from './resolvers';
+
 
 // routes
 export const routes: Routes = [
   {
     path: '',
-    component: fromPages.NewsComponent
+    component: fromPages.NewsComponent,
+    resolve: {
+      articles: fromResolvers.ArticleListeResolver
+    }
   },
   {
     path: 'admin',
@@ -29,7 +35,10 @@ export const routes: Routes = [
       {
         path: 'manage-articles',
         component: fromComponents.NewsManageArticlesComponent,
-        outlet: 'news-admin'
+        outlet: 'news-admin',
+        resolve: {
+          articles: fromResolvers.ArticleListeResolver
+        }
       },
       {
         path: 'moderate-comments',
@@ -44,13 +53,19 @@ export const routes: Routes = [
       {
         path: 'article-form/:articleId',
         component: fromComponents.NewsArticleFormComponent,
-        outlet: 'news-admin'
+        outlet: 'news-admin',
+        resolve: {
+          article: fromResolvers.ArticleResolver
+        }
       }
     ]
   },
   {
     path: ':articleId',
-    component: fromPages.NewsItemComponent
+    component: fromPages.NewsItemComponent,
+    resolve: {
+      article: fromResolvers.ArticleResolver
+    }
   }
 ];
 

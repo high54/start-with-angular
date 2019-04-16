@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 // Rxjs
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 // Models
 import { Article } from '../../models/article.interface';
 import { Comment } from '../../models/comment.interface';
@@ -14,7 +14,8 @@ import { ArticleService, CommentService } from '../../services';
     templateUrl: 'news-item.component.html',
 })
 export class NewsItemComponent implements OnInit {
-    article$: Observable<Article>;
+    article$: Subscription;
+    article: Article;
     comments$: Observable<Comment[]>;
     constructor(
         private articleService: ArticleService,
@@ -25,7 +26,9 @@ export class NewsItemComponent implements OnInit {
 
     ngOnInit(): void {
         if (this.route.snapshot.params.articleId) {
-            this.article$ = this.articleService.getArticle(this.route.snapshot.params.articleId);
+            this.article$ = this.route.data.subscribe((data: { article: Article }) => {
+                this.article = data.article;
+            });
             this.comments$ = this.commentService.getCommentsByArticle(this.route.snapshot.params.articleId);
         } else {
             this.router.navigate(['../']);

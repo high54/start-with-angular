@@ -20,6 +20,8 @@ import * as fromPipes from './pipes';
 // Directives
 import * as fromDirectives from './directives';
 
+// Resolvers
+import * as fromResolvers from './resolvers';
 
 @NgModule({
     imports: [
@@ -34,7 +36,8 @@ import * as fromDirectives from './directives';
         ...fromDirectives.directives
     ],
     providers: [
-        ...fromServices.services
+        ...fromServices.services,
+        ...fromResolvers.resolvers
     ]
 })
 export class NewsModule { }
