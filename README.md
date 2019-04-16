@@ -26,6 +26,7 @@ Page du tutoriel :
     - [article-comments composant](#article-comments-composant)
     - [comment service](#comment-service)
     - [DB.JSON](#dbjson)
+    - [Comment-form](#comment-form)
   - [ng-content](#ng-content)
     - [ng-content et son sélecteur](#ng-content-et-son-s%C3%A9lecteur)
   - [Pipes](#pipes)
@@ -1192,6 +1193,135 @@ Ici nous utilisons le service des commentaires afin de les récupérer.
 
 Dans le template nous ajoutons une div avec un "*ngIf" afin de vérifier la présence des données asynchrone avant de les transmettre aux différents composants.
 
+### Comment-form
+
+Nous allons ajouter un formulaire pour permettre aux utilisateurs de laisser des commentaires sur un article.
+
+/modules/news/components/comment-form/comment-form.component.ts
+```
+
+import { Component, Input, OnDestroy } from '@angular/core';
+import { FormBuilder, Validators, AbstractControl, FormGroup } from '@angular/forms';
+// Rxjs
+import { Subscription } from 'rxjs';
+// Services
+import { CommentService } from '../../services';
+// Models
+import { Comment } from '../../models/comment.interface';
+
+@Component({
+    selector: 'news-comment-form',
+    styleUrls: ['comment-form.component.scss'],
+    templateUrl: 'comment-form.component.html',
+})
+export class NewsCommentFormComponent implements OnDestroy {
+    @Input() articleId: number;
+    postCommentSubscription: Subscription;
+    // Affiche le formulaire ou un message
+    isCommented = false;
+    commentForm = this.fb.group({
+        username: ['', Validators],
+        comment: ['', Validators.required]
+    });
+
+    constructor(
+        private fb: FormBuilder,
+        private commentService: CommentService
+    ) { }
+
+    /**
+     * Demande au service "CommentService" d'ajouter un commentaire
+     * @param form Formulaire du template HTML
+     */
+    postComment(form: FormGroup): void {
+        const { valid, value } = form;
+        if (valid) {
+            // Objet Comment construit à partir des données du formulaire et de l'ID de l'article.
+            const comment: Comment = {
+                author: {
+                    fullName: value.username
+                },
+                content: value.comment,
+                articleId: this.articleId,
+                isModerate: false
+            };
+            this.postCommentSubscription = this.commentService.createComment(comment).subscribe((reateCommentResp) => {
+                this.commentForm.reset();
+                this.isCommented = true;
+            }, (err) => {
+                window.confirm(err);
+            });
+        } else {
+            window.confirm('Les champs sont obligatoires.');
+        }
+    }
+
+    /**
+     * On Destroy, désinscription pour éviter toutes fuites de mémoires.
+     */
+    ngOnDestroy(): void {
+        if (this.postCommentSubscription) {
+            this.postCommentSubscription.unsubscribe();
+        }
+    }
+
+    /**
+     * Getter pour la validation visuel du formulaire.
+     * Permet d'accéder aux propriétés des champs.
+     */
+    get username(): AbstractControl {
+        return this.commentForm.get('username');
+    }
+    get comment(): AbstractControl {
+        return this.commentForm.get('comment');
+    }
+}
+
+```
+
+Comment-form prend en entré l'ID de l'article afin de relier le commentaire à l'article une fois posté.
+Le formulaire prend en paramètre le pseudo de l'utilisateur ainsi que le message.
+Plus tard nous mettrons en place l'authentification afin d'autocompléter directement le champ pseudo.
+
+
+/modules/news/components/comment-form/comment-form.component.html
+```
+<div class="comment-form">
+    <h3>Ajouter un commentaire</h3>
+
+    <divrole="alert" *ngIf="isCommented">
+           Commentaire ajouté ! 
+           Il sera soumis à modération avant d'être affiché.
+    </div>
+
+    <form [formGroup]="commentForm" *ngIf="!isCommented">
+
+            <label for="usernameId">
+                Username*
+            </label>
+            <input type="text" id="usernameId" formControlName="username" required>
+            <div role="alert"
+                *ngIf="(username.dirty || username.touched) && username.invalid && username.errors.required ">
+                Votre pseudo est requis.
+            </div>
+
+
+            <label for="commentId">
+                Commentaire*
+            </label>
+            <textarea type="text" id="commentId" formControlName="comment" required> </textarea>
+            <div role="alert"
+                *ngIf="(comment.dirty || comment.touched) && comment.invalid && comment.errors.required ">
+                Le commentaire ne peut être vide.
+            </div>
+        <button type="button" (click)="postComment(commentForm)">Envoyer</button>
+
+    </form>
+</div>
+
+```
+
+
 
 Il ne manque plus qu'une chose pour pouvoir accéder à un article via son ID. Cependant vous pouvez y accéder directement via la barre d'adresse du navigateur en ajoutant "/1" à l'URL.
 
@@ -1215,6 +1345,7 @@ Maintenant vous devriez pouvoir y accéder facilement. Mais il serait bon d'ajou
     <a routerLink="../">Retour</a>
     <div *ngIf="article$ | async as article">
         <news-article-display [article]="article"></news-article-display>
+        <news-comment-form [articleId]="article?.id"></news-comment-form>
         <news-article-author [author]="article?.author"></news-article-author>
     </div>
     <news-article-comments *ngFor="let comment of (comments$ | async)" [comment]="comment">
@@ -1569,13 +1700,17 @@ Afin de pouvoir l'utiliser il nous faut d'abord modifier la route, puis le compo
 ```
 // routes
 export const routes: Routes = [
+{
+    ...
+    
   {
     path: '',
     component: fromPages.NewsComponent,
     resolve: {
       articles: fromResolvers.ArticleListResolver
     }
-  },
+  }
+}
 
   ```
 

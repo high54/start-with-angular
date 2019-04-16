@@ -1,0 +1,34 @@
+<div class="comment-form">
+    <h3>Ajouter un commentaire</h3>
+
+    <div class="alert alert-success" role="alert" *ngIf="isCommented">
+           Commentaire ajouté ! 
+           Il sera soumis à modération avant d'être affiché.
+    </div>
+
+    <form [formGroup]="commentForm" *ngIf="!isCommented">
+        <div class="form-group">
+            <label for="usernameId">
+                Username*
+            </label>
+            <input type="text" class="form-control" id="usernameId" formControlName="username" required>
+            <div class="alert alert-danger" role="alert"
+                *ngIf="(username.dirty || username.touched) && username.invalid && username.errors.required ">
+                Votre pseudo est requis.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="commentId">
+                Commentaire*
+            </label>
+            <textarea type="text" class="form-control" id="commentId" formControlName="comment" required> </textarea>
+            <div class="alert alert-danger" role="alert"
+                *ngIf="(comment.dirty || comment.touched) && comment.invalid && comment.errors.required ">
+                Le commentaire ne peut être vide.
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="postComment(commentForm)">Envoyer</button>
+
+    </form>
+</div>

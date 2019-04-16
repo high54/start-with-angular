@@ -1,4 +1,10 @@
 <div class="article-comments">
-    <h4>{{comment.author.fullName}}</h4>
-    <p>{{comment.content | commentFilter}}</p>
+    <div class="card">
+        <div class="card-header">
+            {{comment.author.fullName}}
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{comment.content | commentFilter}}</p>
+        </div>
+    </div>
 </div>

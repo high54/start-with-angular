@@ -5,7 +5,7 @@ import { NewsArticleCommentsComponent } from './article-comments/article-comment
 import { NewsManageArticlesComponent } from './manage-articles/manage-article.component';
 import { NewsModerateCommentsComponent } from './moderate-comments/moderate-comments.component';
 import { NewsArticleFormComponent } from './article-form/article-form.component';
-
+import { NewsCommentFormComponent } from './comment-form/comment-form.component';
 export const components: any[] = [
     NewsArticleShortDisplayComponent,
     NewsArticleDisplayComponent,
@@ -13,7 +13,8 @@ export const components: any[] = [
     NewsArticleCommentsComponent,
     NewsManageArticlesComponent,
     NewsModerateCommentsComponent,
-    NewsArticleFormComponent
+    NewsArticleFormComponent,
+    NewsCommentFormComponent
 ];
 
 export * from './article-short-display/article-short-display.component';
@@ -23,3 +24,4 @@ export * from './article-comments/article-comments.component';
 export * from './manage-articles/manage-article.component';
 export * from './moderate-comments/moderate-comments.component';
 export * from './article-form/article-form.component';
+export * from './comment-form/comment-form.component';
