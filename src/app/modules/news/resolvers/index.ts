@@ -1,7 +1,7 @@
-import { ArticleListeResolver } from './article/article-list.resolver';
+import { ArticleListResolver } from './article/article-list.resolver';
 import { ArticleResolver } from './article/article.resolver';
 export const resolvers: any[] = [
-    ArticleListeResolver,
+    ArticleListResolver,
     ArticleResolver
 ];
 

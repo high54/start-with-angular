@@ -18,7 +18,7 @@ export const routes: Routes = [
     path: '',
     component: fromPages.NewsComponent,
     resolve: {
-      articles: fromResolvers.ArticleListeResolver
+      articles: fromResolvers.ArticleListResolver
     }
   },
   {
@@ -37,7 +37,7 @@ export const routes: Routes = [
         component: fromComponents.NewsManageArticlesComponent,
         outlet: 'news-admin',
         resolve: {
-          articles: fromResolvers.ArticleListeResolver
+          articles: fromResolvers.ArticleListResolver
         }
       },
       {

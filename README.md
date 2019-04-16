@@ -32,6 +32,7 @@ Page du tutoriel :
   - [Directives](#directives)
   - [Resolver](#resolver)
     - [Qu'est ce qu'un Resolver ?](#quest-ce-quun-resolver)
+    - [ArtileListResolver](#artilelistresolver)
   - [Faisons le point sur notre application.](#faisons-le-point-sur-notre-application)
   - [News Administration](#news-administration)
   - [Gestion des articles](#gestion-des-articles)
@@ -1510,12 +1511,135 @@ Pour pallier ce problème nous allons mettre en place des resolvers.
 Un resolver est un provider qui va être rattaché à une route afin de charger les données avant l'appelle du composant.
 
 ![diagramme](https://github.com/high54/start-with-angular/blob/master/docs/without-resolve.png?raw=true)
+
 Actuellement quand on clique sur une route, Angular va regarder le composant correspondant à la route et l'instancier, puis via ngOninit, nous faisons appelle à notre service. De ce fait, le premier rendu du template s'effectue avec une liste ou une valeur vide. 
 Avec le resolver attaché à la route, nous indiquons de faire patienter l'utilisateur pendant le chargement des données.
 
 Le Resolver permet d'attendre le retour d'un observable avant l'initialisation ou la mise à jour d'un composant.
 
 ![diagramme](https://github.com/high54/start-with-angular/blob/master/docs/with-resolve.png?raw=true)
+
+### ArtileListResolver
+
+Le premier Resolver que nous allons mettre en place pour notre application est celui qui va s'occuper de la liste des articles.
+
+/modules/news/resolvers/article/article-list.resolver.ts
+```
+import { Injectable } from '@angular/core';
+import { Article } from '../../models/article.interface';
+import { Resolve } from '@angular/router';
+import { Observable } from 'rxjs';
+import { ArticleService } from '../../services';
+
+@Injectable()
+export class ArticleListResolver implements Resolve<Article[]> {
+    constructor(
+        private articleService: ArticleService
+    ) { }
+
+    resolve(): Observable<Article[]> {
+        return this.articleService.getArticles();
+    }
+}
+
+
+```
+
+/modules/news/resolvers/index.ts
+```
+import { ArticleListResolver } from './article/article-list.resolver';
+
+export const resolvers: any[] = [
+    ArticleListResolver
+];
+
+
+export * from './article/article-list.resolver';
+
+
+```
+
+
+Simple et efficace, il utilise simplement notre service ```ArticleService``` pour retourner un ```Observable``` avec la liste des articles.
+
+Afin de pouvoir l'utiliser il nous faut d'abord modifier la route, puis le composant qui affiche les articles sans oublier de le déclarer dans notre NgModule :
+
+/modules/news/news-routing.module.ts
+```
+// routes
+export const routes: Routes = [
+  {
+    path: '',
+    component: fromPages.NewsComponent,
+    resolve: {
+      articles: fromResolvers.ArticleListResolver
+    }
+  },
+
+  ```
+
+  Comme vous pouvez le constater notre route prendre un paramètre ```resolve``` qui prends un un objet composé d'une clé qui nous servira pour récupérer nos données et du resolver en valeur.
+
+/modules/news/news.module.ts
+```
+...
+
+// Resolvers
+import * as fromResolvers from './resolvers';
+
+
+@NgModule({
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        NewsRoutingModule
+    ],
+    declarations: [
+        ...fromPages.pages,
+        ...fromComponents.components,
+        ...fromPipes.pipes,
+        ...fromDirectives.directives
+    ],
+    providers: [
+        ...fromServices.services,
+        ...fromResolvers.resolvers
+    ]
+})
+export class NewsModule { }
+```
+
+/modules/news/pages/news/news.component.ts
+```
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+// Rxjs
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+// Models
+import { Article } from '../../models/article.interface';
+
+
+@Component({
+    selector: 'app-news',
+    styleUrls: ['news.component.scss'],
+    templateUrl: 'news.component.html',
+})
+export class NewsComponent implements OnInit {
+
+    articles$: Observable<Article[]>;
+
+    constructor(
+        private route: ActivatedRoute
+    ) { }
+
+    ngOnInit(): void {
+        this.articles$ = this.route.data.pipe(map((data: { articles: Article[] }) => data.articles));
+    }
+}
+
+```
+
+Ainsi nous avons retiré le service du composant pour déplacer la récupération de données dans le Resolver d'Angular. Il n'i a pas de changement brutal, nous passons d'un observable à un autre. Sauf que cette fois-ci nous passons par la route pour les données.
 
 ## Faisons le point sur notre application.
 Actuellement, il est possible de visualiser l'ensemble des articles, d'afficher un article par son ID avec les commentaires et l'auteur. Si nous survolons le nom de l'auteur, il passe en surbrillance. Concernant les commentaires, un filtre est en place pour censurer.

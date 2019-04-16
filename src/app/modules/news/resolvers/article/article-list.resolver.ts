@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { ArticleService } from '../../services';
 
 @Injectable()
-export class ArticleListeResolver implements Resolve<Article[]> {
+export class ArticleListResolver implements Resolve<Article[]> {
     constructor(
         private articleService: ArticleService
     ) { }
