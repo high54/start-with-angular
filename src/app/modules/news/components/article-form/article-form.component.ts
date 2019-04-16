@@ -64,12 +64,12 @@ export class NewsArticleFormComponent implements OnInit, OnDestroy {
     /**
      * S'il s'agit de l'édition' d'un article, nous demandons au service de mettre à jour l'article.
      * En cas de réussite, l'utilisateur est redirigé vers la liste des articles à l'accueil de l'administration des news
-     * 
+     *
      * S'il s'agit de l'ajout d'un article, nous demandons au service de l'ajouter.
      * En cas de réussite, l'utilisateur est également redirigé vers la liste des articles
-     * 
+     *
      * En cas d'échec dans les deux cas, une fenêtre s'affiche pour indiquer l'erreur.
-     * 
+     *
      * @param form Données du formulaire présent dans le template
      */
     addOrEditArticle(form: FormGroup): void {

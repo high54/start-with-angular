@@ -58,7 +58,7 @@ Page du tutoriel :
   - [Gestion des commentaires](#gestion-des-commentaires)
     - [moderate-comments](#moderate-comments)
   - [Core](#core)
-    - [404 Not Found](#404-not-found)
+    - [Gestion des erreurs](#gestion-des-erreurs)
     - [Header](#header)
     - [Navigation](#navigation)
     - [Authentification](#authentification)
@@ -2478,7 +2478,14 @@ Vous pouvez dès à présent ajouter un dossier dans "app" nommé "core" :
 
 
 
-### 404 Not Found
+### Gestion des erreurs
+
+Plusieurs possibilités concernant les erreurs :
+- L'utilisateur essaie d'accéder à une URL incorrect
+- Une requête HTTP(S) retourne un code erreur (404, 500 ...)
+- Le code génère une erreur
+
+Dasn tous les cas l'utilisateur ne devra pas être bloqué, de plus il sera bon de l'informer
 
 La page 404 est un élément important pour ne pas frustrer l'utilisateur lors de sa navigation.
 Chaque fois que l'URL ne correspondra pas à une route de l'application, l'utilisateur sera automatiquement redirigé vers la page 404.
