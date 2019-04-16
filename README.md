@@ -30,9 +30,9 @@ Page du tutoriel :
     - [ng-content et son sélecteur](#ng-content-et-son-s%C3%A9lecteur)
   - [Pipes](#pipes)
   - [Directives](#directives)
-    - [Resolver](#resolver)
-      - [Qu'est ce qu'un Resolver ?](#quest-ce-quun-resolver)
-    - [Faisons le point sur notre application.](#faisons-le-point-sur-notre-application)
+  - [Resolver](#resolver)
+    - [Qu'est ce qu'un Resolver ?](#quest-ce-quun-resolver)
+  - [Faisons le point sur notre application.](#faisons-le-point-sur-notre-application)
   - [News Administration](#news-administration)
   - [Gestion des articles](#gestion-des-articles)
     - [manage-articles component](#manage-articles-component)
@@ -1498,7 +1498,7 @@ Deuxième étape, utiliser la directive :
 Nous pourrions imaginer une utilisation plus poussée comme par exemple, coupler la directive avec un service qui permettrais d'ajouter des liens dans un texte en fonction de certains mots qui pointerais sur d'autres articles en liens avec ces mots clés.
 
 
-### Resolver
+## Resolver
 
 Vous avez peut-être remarqué un effet de scintillement lors du chargement d'une page. Les données, et la page s'effectue après quelques secondes, très courte, mais tout de même visible.
 
@@ -1506,7 +1506,7 @@ Cette effet de scintillement est dû à la récupération des données directeme
 
 Pour pallier ce problème nous allons mettre en place des resolvers.
 
-#### Qu'est ce qu'un Resolver ?
+### Qu'est ce qu'un Resolver ?
 Un resolver est un provider qui va être rattaché à une route afin de charger les données avant l'appelle du composant.
 
 ![diagramme](https://github.com/high54/start-with-angular/blob/master/docs/without-resolve.png?raw=true)
@@ -1517,7 +1517,7 @@ Le Resolver permet d'attendre le retour d'un observable avant l'initialisation o
 
 ![diagramme](https://github.com/high54/start-with-angular/blob/master/docs/with-resolve.png?raw=true)
 
-### Faisons le point sur notre application.
+## Faisons le point sur notre application.
 Actuellement, il est possible de visualiser l'ensemble des articles, d'afficher un article par son ID avec les commentaires et l'auteur. Si nous survolons le nom de l'auteur, il passe en surbrillance. Concernant les commentaires, un filtre est en place pour censurer.
 
 Nous avons mis en place des pages, qui utilise des composants, des pipes, une directive, des routes, ainsi que des services.
