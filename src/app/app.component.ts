@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 // Ng Slim loading bar
 import { SlimLoadingBarService } from 'ng2-slim-loading-bar';
@@ -15,7 +15,7 @@ import {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'start-with-angular';
 
   constructor(
@@ -27,9 +27,6 @@ export class AppComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-
-  }
   private navigationInterceptor(event: Event): void {
     if (event instanceof NavigationStart) {
       this.loadingBar.start();

@@ -37,15 +37,9 @@
       "id": 4
     },
     {
-<<<<<<< Updated upstream
       "title": "aaa",
       "description": "aa",
       "content": "aaa",
-=======
-      "title": "News",
-      "description": "news",
-      "content": "newsss",
->>>>>>> Stashed changes
       "author": {
         "fullName": "Author N"
       },
@@ -151,6 +145,15 @@
       "articleId": 2,
       "isModerate": true,
       "id": 11
+    },
+    {
+      "author": {
+        "fullName": "ezr"
+      },
+      "content": "azerty",
+      "articleId": 2,
+      "isModerate": false,
+      "id": 12
     }
   ]
 }

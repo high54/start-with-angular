@@ -11,8 +11,8 @@ import { AppRoutingModule } from './app-routing.module';
 // Components
 import { AppComponent } from './app.component';
 
-// Header
-import { HeaderModule } from './core/header/header.module';
+// Ui Module
+import { UiModule } from './core/ui/ui.module';
 
 // Auth Module
 import { AuthModule } from './core/auth/auth.module';
@@ -26,7 +26,7 @@ import { AuthModule } from './core/auth/auth.module';
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    HeaderModule,
+    UiModule,
     AuthModule,
     SlimLoadingBarModule
   ],

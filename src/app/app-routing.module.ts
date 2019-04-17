@@ -15,7 +15,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    loadChildren: './core/not-found/not-found.module#NotFoundModule'
+    loadChildren: './core/errors/errors.module#ErrorsModule'
   }
 ];
 

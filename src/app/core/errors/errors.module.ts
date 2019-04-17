@@ -4,14 +4,15 @@ import { NgModule } from '@angular/core';
 import * as fromPages from './pages';
 
 // Routes
-import { NotFoundRoutingModule } from './not-found-routing.module';
+import { ErrorsRoutingModule } from './errors-routing.module';
 
 @NgModule({
     imports: [
-        NotFoundRoutingModule
+        ErrorsRoutingModule
     ],
     declarations: [
         ...fromPages.pages
-    ]
+    ],
+    providers: []
 })
-export class NotFoundModule { }
+export class ErrorsModule { }
