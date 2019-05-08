@@ -9,24 +9,27 @@ import { User } from '../models/user.interface';
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        // Mise en place de deux utilisateus avec des rôles différents
         const users: User[] = [
-            { id: 1, username: 'admin', password: 'admin', firstName: 'admin', lastName: 'admin', email: 'admin@mail.com', role: 'admin' },
-            { id: 2, username: 'test', password: 'test', firstName: 'Test', lastName: 'User', email: 'user@mail.com', role: 'user' }
+            { id: 1, username: 'admin', password: 'admin', firstName: 'admin', lastName: 'admin', email: 'admin@exemple.com', role: 'admin' },
+            { id: 2, username: 'test', password: 'test', firstName: 'Test', lastName: 'User', email: 'user@exemple.com', role: 'user' }
 
         ];
 
         const authHeader = request.headers.get('Authorization');
         const isLoggedIn = authHeader && authHeader.startsWith('Bearer fake-jwt-token');
 
-        // wrap in delayed observable to simulate server api call
+        // Ajout un delai pour simuler l'API
         return of(null).pipe(mergeMap(() => {
 
-            // authenticate - public
+            // Si la requête pointe sur le end point "/auth" et qu'il s'agit d'un POST
+            // On récupére les identifiants dans la requête pour les comparer avec notre tableau ci dessus
             if (request.url.endsWith('/auth') && request.method === 'POST') {
                 const user = users.find(x => x.username === request.body.username && x.password === request.body.password);
                 if (!user) {
                     return error('Username or password is incorrect');
                 }
+                // Map les informations de l'utilisateur pour les retourner
                 return ok({
                     id: user.id,
                     username: user.username,
@@ -38,10 +41,10 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 });
             }
 
-            // pass through any requests not handled above
+            // Laisse passer toutes les requêtes qui ne correspondent pas à la méthode POST et au end point "/auth"
             return next.handle(request);
         }))
-            // call materialize and dematerialize to ensure delay even if an error is thrown
+            // appelle materialize et dematerialize pour s'assurer d'ajouter un delai même si un erreur est levée
             // (https://github.com/Reactive-Extensions/RxJS/issues/648)
             .pipe(materialize())
             .pipe(delay(500))
