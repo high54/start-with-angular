@@ -6,7 +6,7 @@ import * as fromPages from './pages';
 import * as fromComponents from './components';
 
 // Guard from Auth
-import { AuthGuard } from 'src/app/core/auth/guards';
+import * as fromGuards from 'src/app/core/auth/guards';
 
 // Resolvers
 import * as fromResolvers from './resolvers';
@@ -24,7 +24,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: fromPages.NewsAdminComponent,
-    canActivate: [AuthGuard],
+    canActivate: [fromGuards.AdminAuthGuard],
     children: [
       {
         path: '',

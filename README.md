@@ -2804,4 +2804,57 @@ export * from './http.token.interceptor';
 
 ```
 
-L'intercepteur fakeBackend n'est pas présent dans le fichier index.ts car il n'est utile que le temps du développement. 
+L'intercepteur fakeBackend n'est pas présent dans le fichier index.ts car il n'est utile que le temp du développement. 
+
+
+#### Guards
+
+Un guard permet de contrôler l'accès à une route. En aucun cas il ne permet de sécuriser efficacement. Il est important de mettre en place la sécurité coté API.
+
+Afin de permettre à l'administrateur d'accéder à la page de gestion des articles, nous allons ajouter un guard.
+
+core/auth/guards/admin-auth.guard.ts
+``` ts
+import { Injectable } from '@angular/core';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+// Services
+import { AuthService } from '../services';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class AdminAuthGuard implements CanActivate {
+    constructor(
+        private router: Router,
+        private authService: AuthService
+    ) { }
+
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+        // Récupération de l'utilisateur
+        const currentUser = this.authService.currentUserValue;
+        // Si l'utilisateur est connecté et qu'il est administrateur
+        if (currentUser && currentUser.role === 'admin') {
+            return true;
+        }
+        this.router.navigate(['/authentication']);
+        return false;
+    }
+}
+
+```
+
+Si l'utilisateur est connecté et que son rôle est administrateur, alors on lui permet d'activer la route.
+Sinon, on le redirige vers la page de connexion.
+
+core/auth/guards/index.ts
+``` ts
+import { AdminAuthGuard } from './admin-auth.guard';
+
+export const guards: any[] = [
+    AdminAuthGuard
+];
+
+export * from './admin-auth.guard';
+
+```
+

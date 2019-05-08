@@ -1,7 +1,7 @@
-import { AuthGuard } from './auth.guard';
+import { AdminAuthGuard } from './admin-auth.guard';
 
 export const guards: any[] = [
-    AuthGuard
+    AdminAuthGuard
 ];
 
-export * from './auth.guard';
+export * from './admin-auth.guard';
