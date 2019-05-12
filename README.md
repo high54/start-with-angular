@@ -312,7 +312,7 @@ Voici le code TypeScript du composant article-short-display :
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-    selector: 'news-article-short-dsiplay',
+    selector: 'news-article-short-display',
     styleUrls: ['article-short-display.component.scss'],
     templateUrl: 'article-short-display.component.html',
     changeDetection:  ChangeDetectionStrategy.OnPush
@@ -691,8 +691,8 @@ Voyons le template de la page news :
 ``` html
 <div class="news">
     <h2>News</h2>
-    <news-article-short-dsiplay *ngFor="let article of (articles$ | async)" [article]="article">
-    </news-article-short-dsiplay>
+    <news-article-short-display *ngFor="let article of (articles$ | async)" [article]="article">
+    </news-article-short-display>
 </div>
 
 ```
@@ -708,7 +708,7 @@ import { Component, Input } from '@angular/core';
 import { Article } from '../../models/article.interface';
 
 @Component({
-    selector: 'news-article-short-dsiplay',
+    selector: 'news-article-short-display',
     styleUrls: ['article-short-display.component.scss'],
     templateUrl: 'article-short-display.component.html',
 })
@@ -2708,7 +2708,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 
 ```
 
-Concraitement, l'intercepteur va récupérer la requête avant de l'envoyer pour ajouter dans le header le Json Web Token et ensuite la renvoyer.
+concrètement, l'intercepteur va récupérer la requête avant de l'envoyer pour ajouter dans le header le Json Web Token et ensuite la renvoyer.
 
 Dans le cadre du cours, nous allons mettre en place un intercepteur pour simuler l'utilisation du service d'authentification.
 

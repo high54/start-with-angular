@@ -6,6 +6,7 @@ Créée et pris en charge par Microsoft, c'est un langage Open source.
 Le co inventeur du langage n'est pas moins que le créateur du langage C#.
 
 TypeScript est un langage de programmation utilisé par Angular depuis le passage de la version AngularJS à Angular 2.
+
 Voir le chapitre dédié à l'histoire d'Angular.
 
 
@@ -13,6 +14,11 @@ Il ne s'agit pas de n'importe quelle type de langage étant donné que celui ci 
 Disons que c'est un langage côté développeur.
 
 Il est un sur-ensemble de JavaScript. Tout code JavaScript est valide en TypeScript.
+
+Il prends en charge :
+- Le principe de classe, à la base de la Programmation Orientée Objet
+- Le typage statique
+- Les génériques
 
 Voiçi une fonction JavaScript :
 
