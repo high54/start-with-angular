@@ -49,7 +49,6 @@ Page du tutoriel :
   - [Resolver](#resolver)
     - [Qu'est ce qu'un Resolver ?](#quest-ce-quun-resolver)
     - [ArtileListResolver](#artilelistresolver)
-    - [ArticleResolver](#articleresolver)
   - [Faisons le point sur notre application.](#faisons-le-point-sur-notre-application)
   - [News Administration](#news-administration)
   - [Gestion des articles](#gestion-des-articles)
@@ -63,6 +62,7 @@ Page du tutoriel :
     - [Navigation](#navigation)
     - [Authentification](#authentification)
       - [Interceptor](#interceptor)
+      - [Guards](#guards)
 
 
 
@@ -396,7 +396,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 // Models
-import { Article } from '../../models/article.model';
+import { Article } from '../../models/article.interface';
 @Injectable()
 export class ArticleService {
     private api = 'http://localhost:3000';
