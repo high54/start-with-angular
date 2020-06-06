@@ -15,8 +15,10 @@ ng serve --o
 json-server --watch db.json
 ```
 ### Pour vous connecter :
-identifiant : admin
-mot de passe : admin
+
+Identifiant : admin
+
+Mot de passe : admin
 
 
 Page du tutoriel :
